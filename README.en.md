@@ -1,6 +1,7 @@
 # A tool to overlay a grid over any screen region, providing a guide to help you in your composition and drawing.
 
-AGrilla helps artists to create accurate and detailed drawings using the grid method. It is also of help in composition when using the rule of thirds or the golden ratio. See, for instance, this website [https://letsdrawtoday.com/how-to-use-the-grid-method/](https://letsdrawtoday.com/how-to-use-the-grid-method/).
+AGrilla helps artists to create accurate and detailed drawings using the grid method. It is also of help in composition when using the rule of thirds or the golden ratio. See, for instance, this website
+ <a https://letsdrawtoday.com/how-to-use-the-grid-method/" target="_blank">https://letsdrawtoday.com/how-to-use-the-grid-method/</a>.
 
 
 ## License

@@ -1,8 +1,7 @@
 # Una herramienta para superponer una cuadrícula en cualquier zona de la pantalla, proporcionado una ayuda en la composición y en el dibujo.
 
-AGrilla ayuda a los artistas a crear dibujos precisos y detallados mediante el método de cuadrícula. También es útil en la composición, utilizando la regla de los tercios o la proporción áurea. Ver, por ejemplo, [https://www.pinturayartistas.com/como-dibujar-con-cuadricula-paso-a-paso/](https://www.pinturayartistas.com/como-dibujar-con-cuadricula-paso-a-paso/).
-
-
+AGrilla ayuda a los artistas a crear dibujos precisos y detallados mediante el método de cuadrícula. También es útil en la composición, utilizando la regla de los tercios o la proporción áurea. Ver, por ejemplo, 
+ <a href="https://www.pinturayartistas.com/como-dibujar-con-cuadricula-paso-a-paso/" target="_blank">https://www.pinturayartistas.com/como-dibujar-con-cuadricula-paso-a-paso/</a>.
 
 ## Licencia
 AGrilla se distribuye bajo la licencia MIT, una licencia permisiva de código abierto que permite su uso en cualquier proyecto, ya sea de código abierto o propietario. Esta licencia es compatible con la GPL, por lo que puede utilizar el código de AGrilla en proyectos con licencia GPL.
