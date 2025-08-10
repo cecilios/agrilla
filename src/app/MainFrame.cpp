@@ -103,9 +103,9 @@ void MainFrame::create_toolbar()
         k_bmp_max
     };
 
-    // Create a bitmap bundle from the SVG file, with a 16x16 reference size
-    // icons from https://commons.wikimedia.org/wiki/GNOME_Desktop_icons
-    wxString sResPath = "/datos/cecilio/lm/projects/agrilla/res/";
+    // Create a bitmap bundle from the SVG file, with a 32x32 reference size
+    wxString sResPath = wxGetApp().get_resources_path();
+    wxLogMessage("[MainFrame::create_toolbar] icons path '%s'", sResPath);
     wxSize iconsSize(32,32);
     wxVector<wxBitmapBundle> bitmaps(k_bmp_max);
     bitmaps[k_bmp_grid_options] = wxBitmapBundle::FromSVGFile(sResPath + "options.svg", iconsSize);
@@ -114,7 +114,7 @@ void MainFrame::create_toolbar()
     bitmaps[k_bmp_unlocked_aspect_ratio]= wxBitmapBundle::FromSVGFile(sResPath + "Next.svg", iconsSize);
     bitmaps[k_bmp_locked_aspect_ratio]= wxBitmapBundle::FromSVGFile(sResPath + "lock-screen.svg", iconsSize);
     bitmaps[k_bmp_show_grid]= wxBitmapBundle::FromSVGFile(sResPath + "grid.svg", iconsSize);
-    bitmaps[k_bmp_show_golden_lines]= wxBitmapBundle::FromSVGFile(sResPath + "ZoomIn.svg", iconsSize);
+    bitmaps[k_bmp_show_golden_lines]= wxBitmapBundle::FromSVGFile(sResPath + "ZoomFitScreen.svg", iconsSize);
 
     // Create the custom toolbar panel
     m_toolbar = new ToolBar(this, k_id_toolbar, GetClientSize().GetWidth(), iconsSize);
@@ -216,7 +216,7 @@ void MainFrame::on_paint(wxPaintEvent& WXUNUSED(event))
 //---------------------------------------------------------------------------------------
 void MainFrame::on_quit(wxCommandEvent& WXUNUSED(event))
 {
-    wxConfigBase* pPrefs =  wxGetApp().get_config();
+    wxConfigBase* pPrefs =  wxGetApp().get_preferences();
     pPrefs->Write("/Size/Ratio", m_aspectRatio);
     pPrefs->Write("/Size/Locked", m_fAspectRatioLocked);
     pPrefs->Write("/Grid/Segments", m_gridSize);
@@ -294,7 +294,7 @@ void MainFrame::draw_all_content()
 //---------------------------------------------------------------------------------------
 void MainFrame::get_grid_options()
 {
-    wxConfigBase* pPrefs =  wxGetApp().get_config();
+    wxConfigBase* pPrefs =  wxGetApp().get_preferences();
     m_gridSize = pPrefs->Read("/Grid/Segments", 3L);
 
     wxString sColor("#FFFFFF");
@@ -730,7 +730,7 @@ void MainFrame::on_tool_set_aspect_ratio(wxCommandEvent& WXUNUSED(event))
     {
         double aspectRatio = dlg.get_aspect_ratio();
         wxLogMessage("[MainFrame::on_set_aspect_ratio] New aspect ratio: %.4f", aspectRatio);
-        wxConfigBase* pPrefs = wxGetApp().get_config();
+        wxConfigBase* pPrefs = wxGetApp().get_preferences();
         pPrefs->Write("/Size/Ratio", aspectRatio);
         change_and_lock_aspect_ratio(aspectRatio);
         m_fBitmapIsInvalid = true;

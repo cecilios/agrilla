@@ -19,11 +19,12 @@ public:
     virtual bool OnInit() override;
     virtual int OnExit() override;
 
-    wxConfigBase* get_config() { return m_pPrefs; }
-
+    wxConfigBase* get_preferences() { return m_pPrefs; }
+    wxString get_resources_path();
 
 protected:
-    void create_config_file();
+    void create_preferences_file();
+    wxString get_resources_path_from_executable();
 
     FILE* m_logFilePtr = nullptr;
     wxConfigBase* m_pPrefs = nullptr;

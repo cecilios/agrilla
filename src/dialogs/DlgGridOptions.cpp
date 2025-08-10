@@ -49,7 +49,7 @@ DlgGridOptions::DlgGridOptions(wxWindow* parent)
     create_dialog();
 
     // Get current values for the grid options from the configuration
-    wxConfigBase* pPrefs =  wxGetApp().get_config();
+    wxConfigBase* pPrefs =  wxGetApp().get_preferences();
     m_numGridSegments = pPrefs->Read("/Grid/Segments", 3L);
     wxString sColour("#FFFFFF");
     pPrefs->Read("/Grid/Color", &sColour, "#FFFFFF");
@@ -116,7 +116,7 @@ void DlgGridOptions::on_accept_button(wxCommandEvent& WXUNUSED(event))
     m_gridColour = m_lineColorPicker->GetColour();
 
     // Save the new grid options
-    wxConfigBase* pPrefs =  wxGetApp().get_config();
+    wxConfigBase* pPrefs =  wxGetApp().get_preferences();
     pPrefs->Write("/Grid/Segments", m_numSegmentsCtrl->GetValue());
     pPrefs->Write("/Grid/Color", m_lineColorPicker->GetColour().GetAsString(wxC2S_HTML_SYNTAX));
 

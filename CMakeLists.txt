@@ -5,13 +5,37 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# Define variables needed for config.h
+set(AGRILLA_RES_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/share/agrilla/res")
+set(AGRILLA_INSTALL_ROOT "${CMAKE_INSTALL_PREFIX}/" )    #AGRILLA_INSTALL_ROOT is needed for config.h
+set(AGRILLA_BUILD_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/" )
+
+#set shared folder
+if(UNIX AND NOT APPLE)
+    set(SHARED_DIR ${AGRILLA_INSTALL_ROOT}/share/${CMAKE_PROJECT_NAME})
+elseif(APPLE)
+    set(SHARED_DIR ${AGRILLA_INSTALL_ROOT}/Resources )
+elseif(WIN32)
+    set(SHARED_DIR ${AGRILLA_INSTALL_ROOT} )
+endif()
+
+message(STATUS "SHARED_DIR = ${SHARED_DIR}" )
+
+
 # Find wxWidgets
 find_package(wxWidgets REQUIRED COMPONENTS core base)
 include(${wxWidgets_USE_FILE})
 
+# Generate the header file with the resources installation path
+configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/config.h.in"
+    "${CMAKE_BINARY_DIR}/config.h"
+)
+
 # Define include directories
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/include
+    "${CMAKE_BINARY_DIR}"
 )
 
 # Source files

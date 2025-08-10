@@ -1,0 +1,11 @@
+#pragma once
+#include <string>
+
+//==================================================================
+// Template configuration file.
+// Variables are replaced by CMake, depending on build settings
+//==================================================================
+
+#define AGRILLA_RES_INSTALL_DIR "${AGRILLA_RES_INSTALL_DIR}"
+#define AGRILLA_INSTALL_ROOT "${AGRILLA_INSTALL_ROOT}"
+#define AGRILLA_BUILD_ROOT "${AGRILLA_BUILD_ROOT}"
