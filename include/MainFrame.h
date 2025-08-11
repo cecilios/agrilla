@@ -35,7 +35,6 @@ private:
 
     // Event handlers
     void on_paint(wxPaintEvent& event);
-    void on_size(wxSizeEvent& event);
     void on_quit(wxCommandEvent &event);
     void on_tool_grid_options(wxCommandEvent& event);
     void on_tool_set_aspect_ratio(wxCommandEvent& event);

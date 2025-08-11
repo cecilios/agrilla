@@ -6,15 +6,15 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Define variables needed for config.h
-set(AGRILLA_RES_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/share/agrilla/res")
+set(AGRILLA_RES_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/share/agrilla/res/")
 set(AGRILLA_INSTALL_ROOT "${CMAKE_INSTALL_PREFIX}/" )    #AGRILLA_INSTALL_ROOT is needed for config.h
 set(AGRILLA_BUILD_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/" )
 
 #set shared folder
 if(UNIX AND NOT APPLE)
-    set(SHARED_DIR ${AGRILLA_INSTALL_ROOT}/share/${CMAKE_PROJECT_NAME})
+    set(SHARED_DIR ${AGRILLA_INSTALL_ROOT}share/${CMAKE_PROJECT_NAME})
 elseif(APPLE)
-    set(SHARED_DIR ${AGRILLA_INSTALL_ROOT}/Resources )
+    set(SHARED_DIR ${AGRILLA_INSTALL_ROOT}Resources )
 elseif(WIN32)
     set(SHARED_DIR ${AGRILLA_INSTALL_ROOT} )
 endif()
@@ -66,8 +66,8 @@ set(RESOURCE_FILES
     res/unlocked-aspect-ratio.svg
     res/options.svg
     res/shutdown.svg
-    res/handlers-on.svg
-    res/handlers-off.svg
+    #res/handlers-on.svg
+    #res/handlers-off.svg
 )
 
 # Add the executable

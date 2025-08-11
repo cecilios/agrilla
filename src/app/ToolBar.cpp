@@ -1,8 +1,6 @@
 #include "ToolBar.h"
 #include "MainFrame.h"
 #include <wx/tooltip.h> // For tooltips
-#include <wx/settings.h> // For wxSystemSettings::GetColour
-
 #include <wx/dcclient.h> // Required for wxPaintDC
 #include <wx/brush.h>    // Required for wxBrush
 

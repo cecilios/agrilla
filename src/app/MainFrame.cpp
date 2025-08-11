@@ -69,7 +69,6 @@ MainFrame::MainFrame(const wxSize& initialSize)
 
     //bind the events
     Bind(wxEVT_PAINT, &MainFrame::on_paint, this);
-    Bind(wxEVT_SIZE, &MainFrame::on_size, this);
     Bind(wxEVT_LEFT_DOWN, &MainFrame::on_mouse_left_down, this);
     Bind(wxEVT_MOTION, &MainFrame::on_mouse_motion, this);
     Bind(wxEVT_LEFT_UP, &MainFrame::on_mouse_left_up, this);
@@ -97,7 +96,9 @@ void MainFrame::create_toolbar()
         k_bmp_unlocked_aspect_ratio,
         k_bmp_locked_aspect_ratio,
         k_bmp_show_grid,
+        k_bmp_hide_grid,
         k_bmp_show_golden_lines,
+        k_bmp_hide_golden_lines,
         k_bmp_quit,
         //
         k_bmp_max
@@ -109,19 +110,21 @@ void MainFrame::create_toolbar()
     wxSize iconsSize(32,32);
     wxVector<wxBitmapBundle> bitmaps(k_bmp_max);
     bitmaps[k_bmp_grid_options] = wxBitmapBundle::FromSVGFile(sResPath + "options.svg", iconsSize);
-    bitmaps[k_bmp_set_aspect_ratio] = wxBitmapBundle::FromSVGFile(sResPath + "ZoomPrintSize2.svg", iconsSize);
+    bitmaps[k_bmp_set_aspect_ratio] = wxBitmapBundle::FromSVGFile(sResPath + "set-aspect-ratio.svg", iconsSize);
     bitmaps[k_bmp_quit] = wxBitmapBundle::FromSVGFile(sResPath + "shutdown.svg", iconsSize);
-    bitmaps[k_bmp_unlocked_aspect_ratio]= wxBitmapBundle::FromSVGFile(sResPath + "Next.svg", iconsSize);
-    bitmaps[k_bmp_locked_aspect_ratio]= wxBitmapBundle::FromSVGFile(sResPath + "lock-screen.svg", iconsSize);
-    bitmaps[k_bmp_show_grid]= wxBitmapBundle::FromSVGFile(sResPath + "grid.svg", iconsSize);
-    bitmaps[k_bmp_show_golden_lines]= wxBitmapBundle::FromSVGFile(sResPath + "ZoomFitScreen.svg", iconsSize);
+    bitmaps[k_bmp_unlocked_aspect_ratio]= wxBitmapBundle::FromSVGFile(sResPath + "aspect-ratio-unlocked.svg", iconsSize);
+    bitmaps[k_bmp_locked_aspect_ratio]= wxBitmapBundle::FromSVGFile(sResPath + "aspect-ratio-locked.svg", iconsSize);
+    bitmaps[k_bmp_show_grid]= wxBitmapBundle::FromSVGFile(sResPath + "grid-on.svg", iconsSize);
+    bitmaps[k_bmp_hide_grid]= wxBitmapBundle::FromSVGFile(sResPath + "grid-off.svg", iconsSize);
+    bitmaps[k_bmp_show_golden_lines]= wxBitmapBundle::FromSVGFile(sResPath + "golden-lines-on.svg", iconsSize);
+    bitmaps[k_bmp_hide_golden_lines]= wxBitmapBundle::FromSVGFile(sResPath + "golden-lines-off.svg", iconsSize);
 
     // Create the custom toolbar panel
     m_toolbar = new ToolBar(this, k_id_toolbar, GetClientSize().GetWidth(), iconsSize);
 
     // Add tools using the custom toolbar's methods
-    m_toolbar->add_tool(k_evt_grid_options, bitmaps[k_bmp_grid_options], "Grid options");
-    m_toolbar->add_tool(k_evt_set_aspect_ratio, bitmaps[k_bmp_set_aspect_ratio], "Change aspect ratio");
+    m_toolbar->add_tool(k_evt_grid_options, bitmaps[k_bmp_grid_options], "AGrilla options");
+    m_toolbar->add_tool(k_evt_set_aspect_ratio, bitmaps[k_bmp_set_aspect_ratio], "Set aspect ratio");
     m_toolbar->add_check_tool(k_evt_lock_aspect_ratio,
                             bitmaps[k_bmp_unlocked_aspect_ratio],   // Normal state icon
                             bitmaps[k_bmp_locked_aspect_ratio],     // Checked state icon
@@ -129,12 +132,12 @@ void MainFrame::create_toolbar()
                             "Unlock the aspect ratio");             // Checked state tooltip
     m_toolbar->add_check_tool(k_evt_show_grid,
                             bitmaps[k_bmp_show_grid],   // Normal state icon
-                            bitmaps[k_bmp_show_grid],   // Checked state icon (same as normal for this case)
+                            bitmaps[k_bmp_hide_grid],   // Checked state icon
                             "Hide grid",                // Normal state tooltip
                             "Show grid");               // Checked state tooltip
     m_toolbar->add_check_tool(k_evt_show_golden_lines,
                             bitmaps[k_bmp_show_golden_lines],   // Normal state icon
-                            bitmaps[k_bmp_show_golden_lines],   // Checked state icon
+                            bitmaps[k_bmp_hide_golden_lines],   // Checked state icon
                             "Hide golden lines",                // Normal state tooltip
                             "Show golden lines");               // Checked state tooltip
     m_toolbar->add_tool(k_evt_quit, bitmaps[k_bmp_quit], "Quit");
@@ -148,11 +151,6 @@ void MainFrame::create_toolbar()
     Bind(wxEVT_BUTTON, &MainFrame::on_tool_show_golden_lines, this, k_evt_show_golden_lines);
 
     m_toolbarHeight = m_toolbar->get_size().GetHeight();
-
-    //initial state
-    m_toolbar->set_tool_checked(k_evt_show_grid, true);
-    m_toolbar->set_tool_checked(k_evt_show_golden_lines, true);
-
 }
 
 //---------------------------------------------------------------------------------------
@@ -170,30 +168,6 @@ void MainFrame::create_shaped_frame()
     {
         wxLogError("[create_shaped_frame] Failed to set shape. The window will not be shaped.");
     }
-}
-
-//---------------------------------------------------------------------------------------
-void MainFrame::on_size(wxSizeEvent& WXUNUSED(event))
-{
-//    // Ensure the toolbar exists before trying to resize it
-//    if (m_toolbar)
-//    {
-//        wxSize clientSize = GetClientSize();
-//        // Set the toolbar's size to occupy the full width and its fixed height
-//        m_toolbar->SetSize(0, 0, clientSize.GetWidth(), m_toolbarHeight);
-//
-//        // IMPORTANT: If you have other panels or controls below the toolbar,
-//        // you must also explicitly resize and reposition them here.
-//        // For example, if you have a main content panel named 'm_contentPanel':
-//        // if (m_contentPanel)
-//        // {
-//        //     m_contentPanel->SetSize(0, m_toolbarHeight,
-//        //                             clientSize.GetWidth(), clientSize.GetHeight() - m_toolbarHeight);
-//        // }
-//    }
-//
-//    // Call the base class event handler to allow default processing
-//    event.Skip();
 }
 
 //---------------------------------------------------------------------------------------
@@ -686,7 +660,6 @@ void MainFrame::resize_window_left_mouse_up(wxMouseEvent& WXUNUSED(event))
         ReleaseMouse();
         m_fMouseCaptured = false;
     }
-//    wxLogMessage("[MainFrame::resize_window_left_mouse_up] Ended border drag.");
 }
 
 //---------------------------------------------------------------------------------------
@@ -700,7 +673,7 @@ void MainFrame::compute_aspect_ratio()
     {
         m_aspectRatio = width / height;
     }
-    wxLogWarning("[MainFrame::compute_aspect_ratio] Aspect ratio %.4f", m_aspectRatio);
+    wxLogMessage("[MainFrame::compute_aspect_ratio] Aspect ratio %.4f", m_aspectRatio);
 }
 
 //---------------------------------------------------------------------------------------
@@ -729,7 +702,6 @@ void MainFrame::on_tool_set_aspect_ratio(wxCommandEvent& WXUNUSED(event))
     if (dlg.ShowModal() == wxID_OK)
     {
         double aspectRatio = dlg.get_aspect_ratio();
-        wxLogMessage("[MainFrame::on_set_aspect_ratio] New aspect ratio: %.4f", aspectRatio);
         wxConfigBase* pPrefs = wxGetApp().get_preferences();
         pPrefs->Write("/Size/Ratio", aspectRatio);
         change_and_lock_aspect_ratio(aspectRatio);
@@ -746,7 +718,7 @@ void MainFrame::on_tool_lock_aspect_ratio(wxCommandEvent& event)
 //---------------------------------------------------------------------------------------
 void MainFrame::on_tool_show_grid(wxCommandEvent& event)
 {
-    m_fDrawGrid = event.IsChecked();
+    m_fDrawGrid = !event.IsChecked();
     m_fBitmapIsInvalid = true;
     Refresh();
 }
@@ -754,7 +726,7 @@ void MainFrame::on_tool_show_grid(wxCommandEvent& event)
 //---------------------------------------------------------------------------------------
 void MainFrame::on_tool_show_golden_lines(wxCommandEvent& event)
 {
-    m_fDrawGoldenLines = event.IsChecked();
+    m_fDrawGoldenLines = !event.IsChecked();
     m_fBitmapIsInvalid = true;
     Refresh();
 }
