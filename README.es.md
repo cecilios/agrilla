@@ -3,8 +3,6 @@
 AGrilla ayuda a los artistas a crear dibujos precisos y detallados mediante el método de la cuadrícula. También es útil en la composición, utilizando la regla de los tercios o la proporción áurea. Ver, por ejemplo, 
  <a href="https://www.pinturayartistas.com/como-dibujar-con-cuadricula-paso-a-paso/" target="_blank">https://www.pinturayartistas.com/como-dibujar-con-cuadricula-paso-a-paso/</a>.
 
-**AGrilla todavia no puede descargarse para generar el ejecutable. Tengo que terminar algunos detalles para que funciones correctamente fuera de mi máquina y también faltan por subir algunos iconos que están en preparación. ¡Lo siento! Todo estará solucionado en pocos días**
-
 ## Licencia
 AGrilla se distribuye bajo la licencia MIT, una licencia permisiva de código abierto que permite su uso en cualquier proyecto, ya sea de código abierto o propietario. Esta licencia es compatible con la GPL, por lo que puede utilizar el código de AGrilla en proyectos con licencia GPL.
 

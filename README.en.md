@@ -4,8 +4,6 @@ AGrilla helps artists to create accurate and detailed drawings using the grid me
  <a href="https://letsdrawtoday.com/how-to-use-the-grid-method/" target="_blank">https://letsdrawtoday.com/how-to-use-the-grid-method/</a>.
 
 
-**AGrilla is still not buildable as I need to fix some issues related to running outside my environment. Also I have to upload missing icons not yet finished. In a few days this will be finished. Sorry!**
-
 ## License
 AGrilla is distributed under the MIT license, a permissive open source license to allow AGrilla to be used in any projects, whether open source or proprietary. This license is a GPL compatible license, so you can use AGrilla in GPL licensed projects.
 
