@@ -24,59 +24,15 @@ namespace agrilla
 {
 
 
+//---------------------------------------------------------------------------------------
 bool TheApp::OnInit()
 {
     // 'Main program' equivalent: the program execution "starts" here
 
-////    // Redirect wxLog messages to stderr for visibility in console
-////    wxLog::SetLogLevel(wxLOG_Info);
-////    wxLog::SetActiveTarget(new wxLogStderr);
-//
-//    // Try to open the log file.
-//    // We use a wxLogNull guard here to prevent a message box from appearing
-//    // if the file cannot be opened.
-//    {
-//        wxLogNull noLog;
-//        m_logFilePtr = fopen("agrilla.log", "w");
-//        //~/.config/agrilla/options.ini
-//    }
-//
-//    // Check if the file was opened successfully.
-//    if (m_logFilePtr != nullptr)
-//    {
-//        // If successful, create a wxLogStderr object using the file pointer.
-//        // wxLog::SetActiveTarget() takes ownership of the pointer to the log target.
-//        // This will redirect all wxLog messages to our file.
-//        wxLog::SetActiveTarget(new wxLogStderr(m_logFilePtr));
-//        wxLogMessage("[TheApp::OnInit] Application started successfully.");
-//    }
-//    else
-//    {
-//        // If the file could not be opened, we can log an error.
-//        // This will go to the default log target (usually a message box).
-//        wxLogError("[TheApp::OnInit] Could not open log file 'agrilla.log'. Logging will be disabled.");
-//    }
-
+    create_log_file();
     create_preferences_file();
 
-    // Create the MainFrame
     MainFrame* mainFrame = new MainFrame();
-
-    #if defined(__WXDEBUG__)
-        #ifdef __WXGTK__
-            //in Debug build, use a window to show wxLog messages. This is
-            //the only way I found to see wxLog messages with Code::Blocks
-            wxLogWindow* pMyLog = new wxLogWindow(mainFrame,
-                "Debug window: wxLogMessages", true /*show*/,
-                false /*do not pass message to previous logger*/);
-            pMyLog->GetFrame()->SetSize(1000, 250);
-            wxLog::SetActiveTarget(pMyLog);
-            pMyLog->Flush();
-        #else
-            wxLog::SetActiveTarget( new wxLogStderr );
-        #endif
-    #endif
-
     mainFrame->Show(true);
 
     return true;    //to indicate that the application should continue running
@@ -90,8 +46,10 @@ int TheApp::OnExit()
         fclose(m_logFilePtr);
     }
 
+    delete m_pLogWindow;
+
     m_pPrefs->Flush();
-    delete m_pPrefs;
+//    delete m_pPrefs;      //causes double delete !!  Why?
 
     return wxApp::OnExit();
 }
@@ -99,30 +57,70 @@ int TheApp::OnExit()
 //---------------------------------------------------------------------------------------
 void TheApp::create_preferences_file()
 {
-//    //get the user's standard configuration directory. On Linux "~/.config"
-//    wxStandardPaths::SetFileLayout(FileLayout_XDG);
-//    wxString configDir = wxStandardPaths::Get().GetUserConfigDir();
-//    wxFileName configPath(configDir, "agrilla");
-
-    //'FileLayout_XDG' is not defined in wxWidgets 3.2, so let's do it manually
-    wxString homeDir = wxGetHomeDir();
-    wxFileName configDir(homeDir, wxEmptyString, wxEmptyString, wxPATH_NATIVE);
-    configDir.AppendDir(".config");
-    wxFileName configPath(configDir);
-    configPath.AppendDir("agrilla");
-
-    wxLogMessage("[TheApp::create_preferences_file] configPath '%s'", configPath.GetFullPath());
-
-
-    //create the configuration object
-    wxFileName configFile(configPath.GetFullPath(), "agrilla.ini");
-    wxFileConfig* pConfig = new wxFileConfig("agrilla", "agrilla", configFile.GetFullPath(),
+    wxString configPath = ensure_config_folder_exists("agrilla.ini");
+    wxLogMessage("[TheApp::create_preferences_file] configPath '%s'", configPath);
+    wxFileConfig* pConfig = new wxFileConfig("agrilla", "agrilla", configPath,
                                              "agrilla", wxCONFIG_USE_LOCAL_FILE );
 
     wxConfigBase::Set(pConfig);
     pConfig->SetRecordDefaults();
     pConfig->Flush();
     m_pPrefs = wxConfigBase::Get();
+}
+
+//---------------------------------------------------------------------------------------
+void TheApp::create_log_file()
+{
+//    //In Release builds suppress all log messages with high or equal severity than warning
+//    #if defined(NDEBUG)
+//         wxLog::SetLogLevel(wxLOG_Warning);
+//    #endif
+
+
+#if defined(DEBUG) && defined(__WXGTK__)
+
+    //in local Debug build in Linux with with Code::Blocks, use a window to show wxLog
+    //messages. This is the only way I've found to see wxLog messages in real time
+    //with Code::Blocks
+
+    m_pLogWindow = new wxLogWindow(nullptr,
+                                   "Debug window: wxLogMessages", true /*show*/,
+                                   false /*do not pass message to previous logger*/);
+    m_pLogWindow->GetFrame()->SetSize(1000, 250);
+    wxLog::SetActiveTarget(m_pLogWindow);
+    m_pLogWindow->Flush();
+
+
+#else
+    //In all other scenarios create a log file
+
+    // Try to open/create the log file.
+    wxString logPath = ensure_log_folder_exists("agrilla.log");
+    m_logFilePtr = fopen(logPath, "w");
+
+    // Check if the file was opened successfully.
+    if (m_logFilePtr != nullptr)
+    {
+        // If successful, create a wxLogStderr object using the file pointer.
+        // wxLog::SetActiveTarget() takes ownership of the pointer to the log target.
+        // This will redirect all wxLog messages to our file.
+        wxLog::SetActiveTarget(new wxLogStderr(m_logFilePtr));
+        wxLogMessage("[TheApp::create_log_file] Application started successfully.");
+    }
+    else
+    {
+        // If the file could not be opened, we can log an error.
+        // This will go to the default log target (usually a message box).
+        wxLogError("[TheApp::create_log_file] Could not open log file 'agrilla.log'. Logging will go to the default log target.");
+    }
+#endif
+
+    #if defined(DEBUG)
+        wxLogMessage("[TheApp::create_log_file] macro DEBUG is defined");
+    #endif
+    #if defined(wxDEBUG_LEVEL)
+        wxLogMessage("[TheApp::create_log_file] macro wxDEBUG_LEVEL is defined. Value %d", wxDEBUG_LEVEL);
+    #endif
 }
 
 //---------------------------------------------------------------------------------------
@@ -159,8 +157,8 @@ wxString TheApp::get_resources_path()
     if (path != wxEmptyString)
     {
         //a.1) local build without CMake under the 'agrilla' folder
-        wxLogMessage("Case a.1) local build without CMake under the 'agrilla' folder. res.path='%s'",
-                     path);
+        wxLogMessage("[TheApp::get_resources_path] Case a.1) local build without CMake under the 'agrilla' folder.\n"
+                     "                   Resources path='%s'", path);
         return path;
     }
     else
@@ -172,9 +170,10 @@ wxString TheApp::get_resources_path()
         // Alternativelly, it is a local build out of the source tree. In this las case
         // it is impossible to determine the resources path. So let's assume that is
         // an installed executable and that it is properly installed.
-        wxLogMessage("Case a.2) Out-of-source builds or installed without CMake. res.path='%s'",
-                      wxStandardPaths::Get().GetDataDir());
-        return wxStandardPaths::Get().GetDataDir();
+        path = wxStandardPaths::Get().GetDataDir();
+        wxLogMessage("[TheApp::get_resources_path] Case a.2) Out-of-source builds or installed without CMake.\n"
+                     "                   Resources path='%s'", path);
+        return path;
     }
 
 #else
@@ -187,8 +186,8 @@ wxString TheApp::get_resources_path()
     if (path != wxEmptyString)
     {
         //b.1) local build with CMake under the 'agrilla' folder
-         wxLogMessage("Case b.1) local build with CMake under the 'agrilla' folder. res.path='%s'",
-                      path);
+         wxLogMessage("[TheApp::get_resources_path] Case b.1) local build with CMake under the 'agrilla' folder.\n"
+                      "                   Resources path='%s'", path);
         return path;
     }
     else
@@ -196,9 +195,10 @@ wxString TheApp::get_resources_path()
         //b.2) installed build using CMake. AGRILLA_RES_INSTALL_DIR is valid
         wxFileName fName(AGRILLA_RES_INSTALL_DIR);
         fName.Normalize(wxPATH_NORM_DOTS);
-        wxLogMessage("Case b.2) installed build using CMake. res.path='%s'",
-                      fName.GetFullPath());
-        return fName.GetFullPath();
+        path = fName.GetFullPath();
+        wxLogMessage("[TheApp::get_resources_path] Case b.2) installed build using CMake.\n"
+                     "                   Resources path='%s'", path);
+        return path;
     }
 #endif
 
@@ -251,6 +251,81 @@ wxString TheApp::get_resources_path_from_executable()
         // resources path cannot be determined from the execution path
         return wxEmptyString;
     }
+}
+
+//---------------------------------------------------------------------------------------
+wxString TheApp::ensure_log_folder_exists(const wxString& logFileName)
+{
+    //Ensures the existence of the directory path for application logs
+    //based on the operating system's standard user local data directories,
+    //typically:
+    // - Linux: ~/.local/share
+    // - macOS: ~/Library/Application Support
+    // - Windows: C:\Users\<User>\AppData\Local
+    //It creates the application directory if it not yet exists.
+    //Returns the full path for the log file or wxEmptyString if any failure
+
+    // Get the standard user local data directory.
+    wxStandardPaths::Get().SetFileLayout(wxStandardPaths::FileLayout_XDG);
+    wxString userLocalDataDir = wxStandardPaths::Get().GetUserLocalDataDir();
+
+    // Construct the full directory path for the application logs
+    wxFileName logDirPath(userLocalDataDir, logFileName);
+
+    // Check if the directory exists. If not, create it.
+    // wxPATH_MKDIR_FULL ensures that all intermediate directories are created.
+    // wxS_DIR_DEFAULT uses default permissions.
+    if (!logDirPath.DirExists())
+    {
+        if (!wxFileName::Mkdir(logDirPath.GetPath(), wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL))
+        {
+            wxLogError("Failed to create log directory: %s", logDirPath.GetPath());
+            return wxEmptyString; // Return empty string on failure
+        }
+    }
+
+    //Return the full path to the log file
+    wxFileName logFilePath(logDirPath.GetPath(), logFileName);
+
+     #if defined(DEBUG)
+        wxLogMessage("[TheApp::ensure_log_folder_exists] userLocalDataDir: '%s", userLocalDataDir);
+        wxLogMessage("[TheApp::ensure_log_folder_exists] logDirPath: '%s", logDirPath.GetPath());
+        wxLogMessage("[TheApp::create_log_file] log path '%s'", logFilePath.GetFullPath());
+    #endif
+
+    return logFilePath.GetFullPath();
+}
+
+//---------------------------------------------------------------------------------------
+wxString TheApp::ensure_config_folder_exists(const wxString& configFileName)
+{
+    //Ensures the existence of the directory path for application config file
+    //based on the operating system's standard user local data directories.
+    //It creates the application directory if it not yet exists.
+    //Returns the full path for the config file or wxEmptyString if any failure
+
+    //get the user's standard configuration directory. On Linux "~/.config"
+    wxStandardPaths::Get().SetFileLayout(wxStandardPaths::FileLayout_XDG);
+    wxString configDir = wxStandardPaths::Get().GetUserConfigDir();
+    wxFileName configPath(configDir);
+    configPath.AppendDir("agrilla");
+    wxLogMessage("[TheApp::ensure_config_folder_exists] configPath: '%s'", configPath.GetPath());
+
+    // Check if the directory exists. If not, create it.
+    // wxPATH_MKDIR_FULL ensures that all intermediate directories are created.
+    // wxS_DIR_DEFAULT uses default permissions.
+    if (!configPath.DirExists())
+    {
+        if (!wxFileName::Mkdir(configPath.GetPath(), wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL))
+        {
+            wxLogError("Failed to create config directory: %s", configPath.GetPath());
+            return wxEmptyString; // Return empty string on failure
+        }
+    }
+
+    //Return the full path to the log file
+    wxFileName fullPath(configPath.GetPath(), configFileName);
+    return fullPath.GetFullPath();
 }
 
 

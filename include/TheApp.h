@@ -24,9 +24,14 @@ public:
 
 protected:
     void create_preferences_file();
+    void create_log_file();
     wxString get_resources_path_from_executable();
+    wxString ensure_log_folder_exists(const wxString& logFileName);
+    wxString ensure_config_folder_exists(const wxString& configFileName);
 
     FILE* m_logFilePtr = nullptr;
+    wxLogWindow* m_pLogWindow = nullptr;
+
     wxConfigBase* m_pPrefs = nullptr;
 
 };

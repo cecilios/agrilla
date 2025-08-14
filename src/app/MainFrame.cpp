@@ -261,7 +261,7 @@ void MainFrame::draw_all_content()
 //    // Save the bitmap as mask2.png.
 //    if (!m_bmpMask.SaveFile("mask.png", wxBITMAP_TYPE_PNG))
 //    {
-//        wxLogError("[MainFrame::draw_all_content] Failed to save 'mask.png'.");
+//        wxLogError("[MainFrame::draw_all_content] Failed to export 'mask.png'.");
 //    }
 }
 
