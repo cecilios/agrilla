@@ -26,13 +26,15 @@ class MainFrame;
 class ToolBar : public wxPanel
 {
 public:
-    ToolBar(MainFrame* parent, wxWindowID id, int width, const wxSize& iconsSize);
+    ToolBar(MainFrame* parent, wxWindowID id, int width, const wxSize& iconsSize,
+            const wxColour bgColour);
 
     //building
     void add_tool(wxWindowID id, const wxBitmapBundle& bitmap, const wxString& tooltip);
     void add_check_tool(wxWindowID id, const wxBitmapBundle& normalBitmap,
                         const wxBitmapBundle& checkedBitmap,
                         const wxString& normalTooltip, const wxString& checkedTooltip);
+    void change_colour(const wxColour bgColour);
 
     //accessors for information
     void set_tool_checked(wxWindowID id, bool checked);
@@ -44,6 +46,7 @@ private:
     void on_button_click(wxCommandEvent& event);
 
     wxSize m_iconSize;
+    wxColour m_bgColour;
     wxVector<wxBitmapButton*> m_buttons;
     std::map<wxWindowID, wxBitmapButton*> m_buttonMap; // Map ID to button pointer for quick lookup
     std::map<wxWindowID, wxBitmapBundle> m_toolNormalBitmaps;

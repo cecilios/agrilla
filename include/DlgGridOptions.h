@@ -15,21 +15,30 @@ namespace agrilla
 class DlgGridOptions : public wxDialog
 {
 public:
-    // Constructor
-    DlgGridOptions(wxWindow* parent);
+    DlgGridOptions(wxWindow* parent, int gridSegments, int lineThickness,
+                   const wxColour gridLinesColour, const wxColour goldenLinesColour,
+                   const wxColour toolbarColour);
 
     int get_segments() { return m_numGridSegments; }
-    wxColor& get_color() {return m_gridColour; }
-
+    int get_line_thickness() { return m_lineThickness; }
+    wxColor& get_grid_line_color() { return m_gridLineColour; }
+    wxColor& get_golden_line_color() { return m_goldenLineColour; }
+    wxColor& get_toolbar_color() { return m_toolbarColour; }
 
 private:
     // UI controls
     wxSpinCtrl* m_numSegmentsCtrl;
-    wxColourPickerCtrl* m_lineColorPicker;
+    wxSpinCtrl* m_lineThicknessCtrl;
+    wxColourPickerCtrl* m_gridLineColorPicker;
+    wxColourPickerCtrl* m_goldenLineColorPicker;
+    wxColourPickerCtrl* m_toolbarColorPicker;
 
     // Internal data members
     long        m_numGridSegments;
-    wxColour    m_gridColour;
+    wxColour    m_gridLineColour;
+    wxColor     m_goldenLineColour;
+    int         m_lineThickness;
+    wxColour    m_toolbarColour;
 
     // Private methods
     void create_dialog();
@@ -37,9 +46,7 @@ private:
     // Event handlers
     void on_accept_button(wxCommandEvent& event);
     void on_cancel_button(wxCommandEvent& event);
-
-    wxDECLARE_EVENT_TABLE();
 };
 
-} // namespace agrilla
 
+} // namespace agrilla

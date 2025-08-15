@@ -120,7 +120,7 @@ void MainFrame::create_toolbar()
     bitmaps[k_bmp_hide_golden_lines]= wxBitmapBundle::FromSVGFile(sResPath + "golden-lines-off.svg", iconsSize);
 
     // Create the custom toolbar panel
-    m_toolbar = new ToolBar(this, k_id_toolbar, GetClientSize().GetWidth(), iconsSize);
+    m_toolbar = new ToolBar(this, k_id_toolbar, GetClientSize().GetWidth(), iconsSize, m_toolbarColour);
 
     // Add tools using the custom toolbar's methods
     m_toolbar->add_tool(k_evt_grid_options, bitmaps[k_bmp_grid_options], "AGrilla options");
@@ -194,9 +194,10 @@ void MainFrame::on_quit(wxCommandEvent& WXUNUSED(event))
     pPrefs->Write("/Size/Ratio", m_aspectRatio);
     pPrefs->Write("/Size/Locked", m_fAspectRatioLocked);
     pPrefs->Write("/Grid/Segments", m_gridSize);
-
-    wxString sColour = m_gridColour.GetAsString();
-    pPrefs->Write("/Grid/Color", sColour);
+    pPrefs->Write("/Grid/LineThickness", m_gridLineThickness);
+    pPrefs->Write("/Grid/LineColor", m_gridLinesColour.GetAsString(wxC2S_HTML_SYNTAX));
+    pPrefs->Write("/Grid/GoldenLinesColor", m_goldenLinesColour.GetAsString(wxC2S_HTML_SYNTAX));
+    pPrefs->Write("/Grid/ToolbarColor", m_toolbarColour.GetAsString(wxC2S_HTML_SYNTAX));
 
     Close(true);
 }
@@ -226,7 +227,7 @@ void MainFrame::draw_all_content()
     dc.Clear();
 
     // Draw the mid-grey rectangle at the top, for the toolbar.
-    dc.SetBrush(wxBrush(*wxYELLOW));    //wxColour(128, 128, 128)));
+    dc.SetBrush(wxBrush(m_toolbarColour));
     dc.SetPen(*wxTRANSPARENT_PEN);
     dc.DrawRectangle(0, 0, size.GetWidth(), m_toolbarHeight);
 
@@ -263,17 +264,33 @@ void MainFrame::draw_all_content()
 //---------------------------------------------------------------------------------------
 void MainFrame::get_grid_options()
 {
-    wxConfigBase* pPrefs =  wxGetApp().get_preferences();
-    m_gridSize = pPrefs->Read("/Grid/Segments", 3L);
+    // Get current values for the grid options from the configuration
 
-    wxString sColor("#FFFFFF");
-    pPrefs->Read("/Grid/Color", &sColor, "#FFFFFF");
+    wxConfigBase* pPrefs = wxGetApp().get_preferences();
+    m_gridSize = pPrefs->Read("/Grid/Segments", 3);
+    m_gridLineThickness = pPrefs->Read("/Grid/LineThickness", 1);
+
+    wxString sGridColour("#FFFFFF");
+    pPrefs->Read("/Grid/LineColor", &sGridColour, "#FFFFFF");
+    m_gridLinesColour.Set(sGridColour);
+
+    wxString sGoldenColour("#FFD700");
+    pPrefs->Read("/Grid/GoldenLinesColor", &sGoldenColour, "#FFD700");
+    m_goldenLinesColour.Set(sGoldenColour);
+
+    wxString sToolbarColour("#57E389");
+    pPrefs->Read("/Grid/ToolbarColor", &sToolbarColour, "#57E389");
+    m_toolbarColour.Set(sToolbarColour);
 
     //Don't allow black as it will transformed into transparent
-    if (sColor == "#000000")
-        sColor = "#000005";
+    if (m_goldenLinesColour == *wxBLACK)
+        m_goldenLinesColour = wxColour("#000005");
 
-    m_gridColour.Set(sColor);
+    if (m_gridLinesColour == *wxBLACK)
+        m_gridLinesColour = wxColour("#000005");
+
+    if (m_toolbarColour == *wxBLACK)
+        m_toolbarColour = wxColour("#000005");
 }
 
 //---------------------------------------------------------------------------------------
@@ -298,7 +315,7 @@ void MainFrame::draw_grid_lines(wxDC& dc)
         int left = m_gridRect.GetLeft();
         int top = m_gridRect.GetTop();
 
-        wxPen gridPen(m_gridColour, m_gridLineThickness, wxPENSTYLE_SOLID);
+        wxPen gridPen(m_gridLinesColour, m_gridLineThickness, wxPENSTYLE_SOLID);
         dc.SetPen(gridPen);
 
         // Draw vertical lines
@@ -326,8 +343,7 @@ void MainFrame::draw_golden_lines(wxDC& dc)
         int left = m_gridRect.GetLeft();
         int top = m_gridRect.GetTop();
 
-        m_goldenLinesColour = *wxRED;
-        wxPen goldenPen(m_goldenLinesColour, m_goldenLinesThickness, wxPENSTYLE_SOLID);
+        wxPen goldenPen(m_goldenLinesColour, m_gridLineThickness, wxPENSTYLE_SOLID);
         dc.SetPen(goldenPen);
 
         //calculate golden ratio segments for width and height
@@ -667,16 +683,29 @@ void MainFrame::compute_aspect_ratio()
 //---------------------------------------------------------------------------------------
 void MainFrame::on_tool_grid_options(wxCommandEvent& WXUNUSED(event))
 {
-    DlgGridOptions dlg(this);
+    DlgGridOptions dlg(this, m_gridSize, m_gridLineThickness, m_gridLinesColour,
+                       m_goldenLinesColour, m_toolbarColour);
+
     if (dlg.ShowModal() == wxID_OK)
     {
         m_gridSize = dlg.get_segments();
-        m_gridColour = dlg.get_color();
+        m_gridLineThickness = dlg.get_line_thickness();
+        m_gridLinesColour = dlg.get_grid_line_color();
+        m_goldenLinesColour = dlg.get_golden_line_color();
+        m_toolbarColour = dlg.get_toolbar_color();
         m_fBitmapIsInvalid = true;
 
         //Don't allow black as it will transformed into transparent
-        if (m_gridColour == *wxBLACK)
-            m_gridColour = wxColour("#000005");
+        if (m_goldenLinesColour == *wxBLACK)
+            m_goldenLinesColour = wxColour("#000005");
+
+        if (m_gridLinesColour == *wxBLACK)
+            m_gridLinesColour = wxColour("#000005");
+
+        if (m_toolbarColour == *wxBLACK)
+            m_toolbarColour = wxColour("#000005");
+
+        m_toolbar->change_colour(m_toolbarColour);
 
         Refresh();  //trigger repaint
     }

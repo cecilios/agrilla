@@ -9,10 +9,12 @@ namespace agrilla
 {
 
 //---------------------------------------------------------------------------------------
-ToolBar::ToolBar(MainFrame* parent, wxWindowID id, int width, const wxSize& iconsSize)
+ToolBar::ToolBar(MainFrame* parent, wxWindowID id, int width, const wxSize& iconsSize,
+                 const wxColour bgColour)
     : wxPanel(parent, id, wxPoint(0,0), wxSize(width, 53), wxTAB_TRAVERSAL,
               wxPanelNameStr)
     , m_iconSize(iconsSize)
+    , m_bgColour(bgColour)
     , m_nextButtonX(0)
     , m_buttonPadding(5)
 {
@@ -38,7 +40,7 @@ void ToolBar::add_tool(wxWindowID id, const wxBitmapBundle& bitmap,
                                                 buttonSize, wxBORDER_NONE);
     button->SetToolTip(tooltip);
     button->SetLabel(wxEmptyString);
-    button->SetBackgroundColour(*wxYELLOW);
+    button->SetBackgroundColour(*m_bgColour);
     button->Bind(wxEVT_BUTTON, &ToolBar::on_button_click, this);
 
     m_buttons.push_back(button);
@@ -62,7 +64,7 @@ void ToolBar::add_check_tool(wxWindowID id, const wxBitmapBundle& normalBitmap,
                                                 buttonSize, wxBORDER_NONE);
     button->SetToolTip(normalTooltip);
     button->SetLabel(wxEmptyString);
-    button->SetBackgroundColour(*wxYELLOW);
+    button->SetBackgroundColour(*m_bgColour);
     button->Bind(wxEVT_BUTTON, &ToolBar::on_button_click, this);
 
     m_buttons.push_back(button);
@@ -116,6 +118,16 @@ bool ToolBar::is_tool_checked(wxWindowID id) const
         return it->second;
     }
     return false; // Default for non-check tools or unknown ID
+}
+
+//---------------------------------------------------------------------------------------
+void ToolBar::change_colour(const wxColour bgColour)
+{
+    for (auto it = m_buttonMap.begin(); it != m_buttonMap.end(); ++it)
+    {
+        wxBitmapButton* button = it->second;
+        button->SetBackgroundColour(bgColour);
+    }
 }
 
 //---------------------------------------------------------------------------------------

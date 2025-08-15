@@ -70,9 +70,10 @@ private:
 
 private:
     //GUI layout
-    bool m_fBitmapIsInvalid = true;
-    wxBitmap m_bmpMask;               //the image that will define the opaque regions
-    ToolBar* m_toolbar = nullptr;
+    bool        m_fBitmapIsInvalid = true;
+    wxBitmap    m_bmpMask;               //the image that will define the opaque regions
+    ToolBar*    m_toolbar = nullptr;
+    wxColour    m_toolbarColour;
     int m_toolbarHeight = 53;
     wxSize m_toolbarSize;
     wxRect m_clientRect;
@@ -94,14 +95,13 @@ private:
 
     // Grid properties
     bool m_fDrawGrid = true;
-    int m_gridSize = 4;
-    int m_gridLineThickness = 3;
-    wxColour m_gridColour = *wxWHITE;
+    int m_gridSize;
+    int m_gridLineThickness;
+    wxColour m_gridLinesColour;
 
     // Golden lines
     bool m_fDrawGoldenLines = true;
-    int m_goldenLinesThickness = 3;
-    wxColour m_goldenLinesColour = *wxBLACK;
+    wxColour m_goldenLinesColour;
 
     // Aspect Ratio lock properties
     double m_aspectRatio = 1.0;          //defined as Width / Height
