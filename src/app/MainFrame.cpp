@@ -233,12 +233,7 @@ void MainFrame::draw_all_content()
     // Define the bottom rectangle where the grid will be drawn.
     m_clientRect = wxRect(0, m_toolbarHeight, size.GetWidth(), size.GetHeight() - m_toolbarHeight);
 
-    //The grid is small than the client rectangle as somo space must be placed aroun to
-    //fit the resizin handlers
-    int halfHandle = (m_handlerSide - m_gridLineThickness) / 2;
-    m_gridRect = wxRect(0 + halfHandle, m_toolbarHeight + halfHandle,
-                        m_clientRect.GetWidth() - m_handlerSide,
-                        m_clientRect.GetHeight() - m_handlerSide);
+    // Define the grid area. For now it is going to be the client area
     m_gridRect = m_clientRect;
 
 //    wxLogMessage("[MainFrame::draw_all_content] client=(%d,%d,%d,%d), grid=(%d,%d,%d,%d)",
@@ -354,43 +349,36 @@ void MainFrame::draw_resize_handlers(wxDC& dc)
 {
     if (m_fDrawHandlers)
     {
-        int halfHandle = (m_handlerSide - m_gridLineThickness) / 2;
         wxPen borderPen(wxColour(0,0,5), 2);    //nearly black, black cannot be used
         dc.SetBrush(*wxWHITE);
         dc.SetPen(borderPen);
 
+        int halfHandle = (m_handlerSide - m_gridLineThickness) / 2;
+
         //right handle
-        m_rightHandle = wxRect(m_gridRect.GetRight() - halfHandle,
-                               m_gridRect.GetHeight() / 2 + m_toolbarHeight,
+        m_rightHandle = wxRect(m_gridRect.GetRight() - m_handlerSide,
+                               m_gridRect.GetHeight() / 2 - halfHandle + m_toolbarHeight,
                                m_handlerSide, m_handlerSide);
         dc.DrawRectangle(m_rightHandle);
 
 
         //left handle
-        m_leftHandle  = wxRect(m_gridRect.GetLeft() - halfHandle,
-                               m_gridRect.GetHeight() / 2 + m_toolbarHeight,
+        m_leftHandle  = wxRect(m_gridRect.GetLeft(),
+                               m_gridRect.GetHeight() / 2 - halfHandle + m_toolbarHeight,
                                m_handlerSide, m_handlerSide);
         dc.DrawRectangle(m_leftHandle);
 
         //top handle
-        m_topHandle = wxRect(m_gridRect.GetWidth() / 2,
-                               m_gridRect.GetTop() - halfHandle,
+        m_topHandle = wxRect(m_gridRect.GetWidth() / 2 - halfHandle,
+                               m_gridRect.GetTop(),
                                m_handlerSide, m_handlerSide);
         dc.DrawRectangle(m_topHandle);
 
         //bottom handle
-        m_bottomHandle = wxRect(m_gridRect.GetWidth() / 2,
-                               m_gridRect.GetBottom() - halfHandle,
+        m_bottomHandle = wxRect(m_gridRect.GetWidth() / 2 - halfHandle,
+                               m_gridRect.GetBottom() - m_handlerSide,
                                m_handlerSide, m_handlerSide);
         dc.DrawRectangle(m_bottomHandle);
-
-
-//        //adjust rectangles to compare with mouse position
-//        m_clientRect.SetTop( m_clientRect.GetTop() - m_toolbarHeight);
-//        m_rightHandle.SetTop( m_rightHandle.GetTop() - m_toolbarHeight);
-//        m_bottomHandle.SetTop( m_bottomHandle.GetTop() - m_toolbarHeight);
-//        m_leftHandle.SetTop( m_leftHandle.GetTop() - m_toolbarHeight);
-//        m_topHandle.SetTop( m_topHandle.GetTop() - m_toolbarHeight);
     }
 }
 
