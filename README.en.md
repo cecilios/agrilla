@@ -1,5 +1,8 @@
 # A tool to overlay a grid over any screen region, providing a guide to help you in your composition and drawing.
 
+![AGrilla](docs/images/grid-adjusted.jpg?raw=true)
+
+
 AGrilla helps artists to create accurate and detailed drawings using the grid method. It is also of help in composition when using the rule of thirds or the golden ratio. See, for instance, this website
  <a href="https://letsdrawtoday.com/how-to-use-the-grid-method/" target="_blank">https://letsdrawtoday.com/how-to-use-the-grid-method/</a>.
 
@@ -15,11 +18,15 @@ For details, see file [LICENSE](LICENSE).
 
 **In composition:**
 * Adjust the grid dimensions to the size of the paper or canvas you'll be using and move it over the reference image to find the framing you like best.
+![In composition](docs/images/grid-golden-lines.jpg?raw=true)
+
 * Choose the grid with the golden ratio lines to find the locations to place important focal points, such as the main subject or other elements of interest.
 
 **As a help for precise drawing:**
 * Divide the image in halfs or thirds to quickly locate the center of the image or as an aid in composition, to use the "rule of thidrs".
 * Use the grid as a drawing aid. Choose a higher number of grid divisions to accurately draw the most complicated parts of the model.
+![More divisions](docs/images/grid-more-divisions.jpg?raw=true)
+
 
 
 
@@ -27,6 +34,8 @@ For details, see file [LICENSE](LICENSE).
 
 * **Customizable grid:**
 Choose the size and divisions you want to adapt it to the needs of your project.
+![Customize](docs/images/grid-options.jpg?raw=true)
+
 
 * **Adjust to your needs:**
 Easily and effortlessly adjust the color and thickness of the grid lines to suit your preferences and visual needs, thanks to its simple and intuitive interface that doesn't require studying any manual. You can also choose the type of grid: regular or based on the golden ratio.

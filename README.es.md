@@ -1,5 +1,7 @@
 # Una herramienta para superponer una cuadrícula en cualquier zona de la pantalla, proporcionado una ayuda en la composición y en el dibujo.
 
+![AGrilla](docs/images/grid-adjusted.jpg?raw=true)
+
 AGrilla ayuda a los artistas a crear dibujos precisos y detallados mediante el método de la cuadrícula. También es útil en la composición, utilizando la regla de los tercios o la proporción áurea. Ver, por ejemplo, 
  <a href="https://www.pinturayartistas.com/como-dibujar-con-cuadricula-paso-a-paso/" target="_blank">https://www.pinturayartistas.com/como-dibujar-con-cuadricula-paso-a-paso/</a>.
 
@@ -14,13 +16,15 @@ Para más detalles, consulta el archivo [LICENSE](LICENSE).
 
 En la composición.
 * Ajusta las dimensines de la rejilla al tamaño del papel o lienzo que vas a utilizar y desplazala sobre la imagen de referencia para encontrar el encuadre que más te guste.
+![In composition](docs/images/grid-golden-lines.jpg?raw=true)
+
 * Elije la rejilla con las líneas de las proporciones áureas para situar sobre ellas los puntos focales importantes, como el sujeto principal o elementos de interés.
 
 
 Durante el dibujo:
 * Localizar las lineas del centro o los tercipos de la imagen. Elije el número de divisiones de la cuadrícula, 2 ó 3, para localizar rápidamente el centro de la imagen o las líneas que la dividen en tercios y que ayudan en la composición.
 * Ayuda para dibujar. Elije un mayor número de divisiones de la cuadrícula, para dibujar con mayor precisión las partes más complicadas del modelo.
-
+![More divisions](docs/images/grid-more-divisions.jpg?raw=true)
 
 ## Funcionalidades
 * **Superposición de una cuadrícula personalizable:**
@@ -28,6 +32,7 @@ AGrilla te permite superponer una cuadrícula personalizable sobre cualquier ima
 
 * **Personalización de cuadrícula:**
 Ajusta muy fácilmente y sin complicaciones el color y el grosor de las líneas de la cuadrícula según tus preferencias y necesidades, gracias a su interfaz sencilla e intuitiva que no requiere estudiar ningún manual. Tambien puedes elegir el tipo de cuadrícula: regular o basada en las proporciones aureas.
+![Customize](docs/images/grid-options.jpg?raw=true)
 
 * **Ajuste de la cuadricula al tamaño del lienzo:**
 Simplemente indica el tamaño (ancho y alto) del papel o lienzo que vayas a usar. La cuadrícula adoptará inmediatamente la misma razón de aspecto que tu lienzo. Y cuando amplies o disminuyas la rejilla, arrastrando con el ratón sus bordes, se mantendrá automáticamente la razón de aspecto elegida.
