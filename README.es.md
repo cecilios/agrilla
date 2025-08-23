@@ -51,7 +51,7 @@ Estos requisitos normalmente ya están instalados en sistemas Linux.
 
 ### Paso 2: Descargar el código fuente
 
-Supongamos que tienes una carpeta llamada `proyectos`. Crea una subcarpeta para Agrilla y descárga los funtes desde el repositorio principal en GitHub:
+Supongamos que tienes una carpeta llamada `proyectos`. Crea una subcarpeta para AGrilla y descarga los fuentes desde el repositorio principal en GitHub:
 
 ```
 cd proyectos
@@ -87,7 +87,7 @@ cmake -G "Unix Makefiles" ../
 
 ### Paso 4: Compilando el proyecto
 
-Ahora puedes compilar el código fuente y compilar. Es muy rápido:
+Ahora puedes compilar el código fuente y ejecutar. Es muy rápido:
 
 ```
 make
