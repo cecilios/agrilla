@@ -1,3 +1,12 @@
+//---------------------------------------------------------------------------------------
+// This file is part of the AGrilla application.
+// Copyright (c) 2025-present, Cecilios Salmeron
+//
+// Licensed under the MIT license.
+//
+// See LICENSE file in the root directory of this source tree.
+//---------------------------------------------------------------------------------------
+
 // For compilers that support precompilation, includes "wx/wxprec.h".
 #include "wx/wxprec.h"
 #ifndef WX_PRECOMP
@@ -18,6 +27,7 @@
 #include "TheApp.h"
 #include "DlgGridOptions.h"
 #include "DlgAspectRatio.h"
+#include "DlgAbout.h"
 #include "ToolBar.h"
 
 //std
@@ -47,6 +57,7 @@ enum
     k_evt_lock_aspect_ratio,
     k_evt_show_grid,
     k_evt_show_golden_lines,
+    k_evt_about,
     k_evt_quit,
 
 
@@ -99,6 +110,7 @@ void MainFrame::create_toolbar()
         k_bmp_hide_grid,
         k_bmp_show_golden_lines,
         k_bmp_hide_golden_lines,
+        k_bmp_about,
         k_bmp_quit,
         //
         k_bmp_max
@@ -118,6 +130,7 @@ void MainFrame::create_toolbar()
     bitmaps[k_bmp_hide_grid]= wxBitmapBundle::FromSVGFile(sResPath + "grid-off.svg", iconsSize);
     bitmaps[k_bmp_show_golden_lines]= wxBitmapBundle::FromSVGFile(sResPath + "golden-lines-on.svg", iconsSize);
     bitmaps[k_bmp_hide_golden_lines]= wxBitmapBundle::FromSVGFile(sResPath + "golden-lines-off.svg", iconsSize);
+    bitmaps[k_bmp_about]= wxBitmapBundle::FromSVGFile(sResPath + "about.svg", iconsSize);
 
     // Create the custom toolbar panel
     m_toolbar = new ToolBar(this, k_id_toolbar, GetClientSize().GetWidth(), iconsSize, m_toolbarColour);
@@ -140,10 +153,12 @@ void MainFrame::create_toolbar()
                             bitmaps[k_bmp_hide_golden_lines],   // Checked state icon
                             "Hide golden lines",                // Normal state tooltip
                             "Show golden lines");               // Checked state tooltip
+    m_toolbar->add_tool(k_evt_about, bitmaps[k_bmp_about], "About");
     m_toolbar->add_tool(k_evt_quit, bitmaps[k_bmp_quit], "Quit");
 
     //tools
     Bind(wxEVT_BUTTON, &MainFrame::on_quit, this, k_evt_quit);
+    Bind(wxEVT_BUTTON, &MainFrame::on_about, this, k_evt_about);
     Bind(wxEVT_BUTTON, &MainFrame::on_tool_grid_options, this, k_evt_grid_options);
     Bind(wxEVT_BUTTON, &MainFrame::on_tool_set_aspect_ratio, this, k_evt_set_aspect_ratio);
     Bind(wxEVT_BUTTON, &MainFrame::on_tool_lock_aspect_ratio, this, k_evt_lock_aspect_ratio);
@@ -278,8 +293,8 @@ void MainFrame::get_grid_options()
     pPrefs->Read("/Grid/GoldenLinesColor", &sGoldenColour, "#FFD700");
     m_goldenLinesColour.Set(sGoldenColour);
 
-    wxString sToolbarColour("#57E389");
-    pPrefs->Read("/Grid/ToolbarColor", &sToolbarColour, "#57E389");
+    wxString sToolbarColour("#49B04A");
+    pPrefs->Read("/Grid/ToolbarColor", &sToolbarColour, "#49B04A");
     m_toolbarColour.Set(sToolbarColour);
 
     //Don't allow black as it will transformed into transparent
@@ -678,6 +693,13 @@ void MainFrame::compute_aspect_ratio()
         m_aspectRatio = width / height;
     }
     wxLogMessage("[MainFrame::compute_aspect_ratio] Aspect ratio %.4f", m_aspectRatio);
+}
+
+//---------------------------------------------------------------------------------------
+void MainFrame::on_about(wxCommandEvent& WXUNUSED(event))
+{
+    AboutDialog dlg(this);
+    dlg.ShowModal();
 }
 
 //---------------------------------------------------------------------------------------

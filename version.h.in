@@ -1,0 +1,21 @@
+//---------------------------------------------------------------------------------------
+// This file is part of the AGrilla project.
+// Copyright (c) 2025-present, AGrilla developers
+//
+// Licensed under the MIT license.
+//
+// See LICENSE file in the root directory of this source tree.
+//---------------------------------------------------------------------------------------
+
+#pragma once
+
+//---------------------------------------------------------------------------------------
+// version strings
+//---------------------------------------------------------------------------------------
+#define AGRILLA_VERSION_MAJOR    @AGRILLA_VERSION_MAJOR@
+#define AGRILLA_VERSION_MINOR    @AGRILLA_VERSION_MINOR@
+#define AGRILLA_VERSION_PATCH    "@AGRILLA_VERSION_PATCH@"
+
+#define AGRILLA_VERSION               "@AGRILLA_VERSION@"
+#define AGRILLA_VERSION_LONG          "@AGRILLA_VERSION_LONG@"
+

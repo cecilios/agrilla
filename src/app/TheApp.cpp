@@ -1,3 +1,12 @@
+//---------------------------------------------------------------------------------------
+// This file is part of the AGrilla application.
+// Copyright (c) 2025-present, Cecilios Salmeron
+//
+// Licensed under the MIT license.
+//
+// See LICENSE file in the root directory of this source tree.
+//---------------------------------------------------------------------------------------
+
 //wxWidgets
 #include <wx/graphics.h>
 #include <wx/log.h> // For logging messages
@@ -10,6 +19,7 @@
 #include "TheApp.h"
 #include "MainFrame.h"
 #include "config.h"
+#include "version.h"
 
 //other
 #include <fstream>
@@ -326,6 +336,41 @@ wxString TheApp::ensure_config_folder_exists(const wxString& configFileName)
     //Return the full path to the log file
     wxFileName fullPath(configPath.GetPath(), configFileName);
     return fullPath.GetFullPath();
+}
+
+//---------------------------------------------------------------------------------------
+int TheApp::get_version_major() { return AGRILLA_VERSION_MAJOR; }
+
+//---------------------------------------------------------------------------------------
+int TheApp::get_version_minor() { return AGRILLA_VERSION_MINOR; }
+
+//---------------------------------------------------------------------------------------
+wxString TheApp::get_version_patch() { return AGRILLA_VERSION_PATCH; }
+
+//---------------------------------------------------------------------------------------
+wxString TheApp::get_version_string()
+{
+    return AGRILLA_VERSION;
+}
+
+//---------------------------------------------------------------------------------------
+wxString TheApp::get_version_long_string()
+{
+    return AGRILLA_VERSION_LONG;
+}
+
+//---------------------------------------------------------------------------------------
+wxString TheApp::get_build_date()
+{
+    //__DATE__ string: contains eleven characters and looks like "Feb 12 1996".
+    // If the day of the month is less than 10, it is padded with a space on the
+    // left, e.g., "Oct  8 2013"
+    //__TIME__ : the time at which the preprocessor is being run. The string
+    // contains eight characters and looks like "23:59:01"
+
+    wxString date(__DATE__);
+    return date.substr(4,2) + "-" + date.substr(0,3) + "-" + date.substr(7,4)
+           + " " + wxString(__TIME__);
 }
 
 

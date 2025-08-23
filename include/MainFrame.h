@@ -1,3 +1,12 @@
+//---------------------------------------------------------------------------------------
+// This file is part of the AGrilla application.
+// Copyright (c) 2025-present, Cecilios Salmeron
+//
+// Licensed under the MIT license.
+//
+// See LICENSE file in the root directory of this source tree.
+//---------------------------------------------------------------------------------------
+
 #pragma once
 
 #include "wx/wxprec.h"
@@ -41,6 +50,7 @@ private:
     void on_tool_lock_aspect_ratio(wxCommandEvent& event);
     void on_tool_show_grid(wxCommandEvent& event);
     void on_tool_show_golden_lines(wxCommandEvent& event);
+    void on_about(wxCommandEvent& WXUNUSED(event));
 
     //helpers for building
     void create_toolbar();

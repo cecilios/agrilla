@@ -1,3 +1,12 @@
+//---------------------------------------------------------------------------------------
+// This file is part of the AGrilla application.
+// Copyright (c) 2025-present, Cecilios Salmeron
+//
+// Licensed under the MIT license.
+//
+// See LICENSE file in the root directory of this source tree.
+//---------------------------------------------------------------------------------------
+
 #pragma once
 
 //wxWidgets
@@ -21,6 +30,14 @@ public:
 
     wxConfigBase* get_preferences() { return m_pPrefs; }
     wxString get_resources_path();
+
+    //program info
+    static wxString get_version_string();
+    static wxString get_version_long_string();
+    static int get_version_major();
+    static int get_version_minor();
+    static wxString get_version_patch();
+    static wxString get_build_date();
 
 protected:
     void create_preferences_file();

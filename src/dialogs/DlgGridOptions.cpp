@@ -1,3 +1,12 @@
+//---------------------------------------------------------------------------------------
+// This file is part of the AGrilla application.
+// Copyright (c) 2025-present, Cecilios Salmeron
+//
+// Licensed under the MIT license.
+//
+// See LICENSE file in the root directory of this source tree.
+//---------------------------------------------------------------------------------------
+
 //wxWidgets
 #include "wx/wxprec.h"      //For compilers that support precompilation, includes "wx/wx.h".
 #ifndef WX_PRECOMP

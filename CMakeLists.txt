@@ -1,6 +1,6 @@
 #---------------------------------------------------------------------------------------
-#  This file is part of LenMus AGrilla program
-#  Copyright (c) 2025 AGRilla project
+#  This file is part of the AGrilla program
+#  Copyright (c) 2025-present AGRilla developers
 #
 #  This program is free software; you can redistribute it and/or modify it under the
 #  terms of the MIT License.
@@ -59,7 +59,7 @@ endif()
 # Define variables needed for config.h
 set(AGRILLA_RES_INSTALL_DIR "${CMAKE_INSTALL_PREFIX}/share/agrilla/res/")
 set(AGRILLA_INSTALL_ROOT "${CMAKE_INSTALL_PREFIX}/" )    #AGRILLA_INSTALL_ROOT is needed for config.h
-set(AGRILLA_BUILD_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/" )
+set(AGRILLA_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/" )
 
 #set shared folder
 if(UNIX AND NOT APPLE)
@@ -75,7 +75,7 @@ message(STATUS "CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}" )
 
 
 # Find wxWidgets
-find_package(wxWidgets REQUIRED COMPONENTS core base)
+find_package(wxWidgets REQUIRED COMPONENTS core base html)
 include(${wxWidgets_USE_FILE})
 
 # Generate the header file with the resources installation path
@@ -83,6 +83,9 @@ configure_file(
     "${CMAKE_CURRENT_SOURCE_DIR}/config.h.in"
     "${CMAKE_BINARY_DIR}/config.h"
 )
+
+# generate the header file with the version information
+include( ${CMAKE_CURRENT_SOURCE_DIR}/build-version.cmake )
 
 # Define include directories
 include_directories(
@@ -95,6 +98,7 @@ set(SOURCE_FILES
     src/app/MainFrame.cpp
     src/app/TheApp.cpp
     src/app/ToolBar.cpp
+    src/dialogs/DlgAbout.cpp
     src/dialogs/DlgAspectRatio.cpp
     src/dialogs/DlgGridOptions.cpp
 )
@@ -102,17 +106,18 @@ set(SOURCE_FILES
 
 # Add resources for installation
 set(RESOURCE_FILES
+    res/about.svg
+    res/aspect-ratio-locked.svg
+    res/aspect-ratio-unlocked.svg
     res/grid-on.svg
     res/grid-off.svg
     res/golden-lines-on.svg
     res/golden-lines-off.svg
-    res/aspect-ratio-locked.svg
-    res/aspect-ratio-unlocked.svg
-    res/options.svg
-    res/shutdown.svg
-    res/set-aspect-ratio.svg
     #res/handlers-on.svg
     #res/handlers-off.svg
+    res/options.svg
+    res/set-aspect-ratio.svg
+    res/shutdown.svg
 )
 
 # Add the executable
