@@ -1,6 +1,6 @@
 //---------------------------------------------------------------------------------------
 // This file is part of the AGrilla application.
-// Copyright (c) 2025-present, Cecilios Salmeron
+// Copyright (c) 2025-present, Cecilio Salmeron
 //
 // Licensed under the MIT license.
 //
