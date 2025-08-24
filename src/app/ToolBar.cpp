@@ -25,7 +25,7 @@ ToolBar::ToolBar(MainFrame* parent, wxWindowID id, int width, const wxSize& icon
     , m_iconSize(iconsSize)
     , m_bgColour(bgColour)
     , m_nextButtonX(0)
-    , m_buttonPadding(5)
+    , m_buttonPadding(3)
 {
     //Tric to deal with the mouse. As MainFrame is a shaped frame, the mouse needs
     //to be captured and managed by MainFrame. Thus, mouse events are first

@@ -109,10 +109,12 @@ set(RESOURCE_FILES
     res/about.svg
     res/aspect-ratio-locked.svg
     res/aspect-ratio-unlocked.svg
-    res/grid-on.svg
-    res/grid-off.svg
-    res/golden-lines-on.svg
+    res/frame-off.svg
+    res/frame-on.svg
     res/golden-lines-off.svg
+    res/golden-lines-on.svg
+    res/grid-off.svg
+    res/grid-on.svg
     #res/handlers-on.svg
     #res/handlers-off.svg
     res/options.svg

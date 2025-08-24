@@ -27,8 +27,8 @@ const int k_id_cancel = ::wxNewId();
 //---------------------------------------------------------------------------------------
 DlgGridOptions::DlgGridOptions(wxWindow* parent, int numGridSegments, int lineThickness,
                    const wxColour gridLinesColour, const wxColour goldenLinesColour,
-                   const wxColour toolbarColour)
-    : wxDialog(parent, wxID_ANY, _T("Grid Options"), wxDefaultPosition, wxDefaultSize,
+                   const wxColour toolbarColour, const wxColour frameColour)
+    : wxDialog(parent, wxID_ANY, _T("AGrilla Options"), wxDefaultPosition, wxDefaultSize,
                wxCAPTION | wxRESIZE_BORDER | wxSYSTEM_MENU | wxCLOSE_BOX)
 {
     // Bind event handlers
@@ -44,6 +44,7 @@ DlgGridOptions::DlgGridOptions(wxWindow* parent, int numGridSegments, int lineTh
     m_gridLineColorPicker->SetColour(gridLinesColour);
     m_goldenLineColorPicker->SetColour(goldenLinesColour);
     m_toolbarColorPicker->SetColour(toolbarColour);
+    m_frameColorPicker->SetColour(frameColour);
 }
 
 //---------------------------------------------------------------------------------------
@@ -86,17 +87,24 @@ void DlgGridOptions::create_dialog()
 
     // Golden Lines Color Picker
     wxStaticText* goldenLineColorLabel = new wxStaticText(this, wxID_ANY, "Golden Line Color:");
-    m_goldenLineColorPicker = new wxColourPickerCtrl(this, wxID_ANY, wxColour(255, 215, 0)); // Default Gold color
+    m_goldenLineColorPicker = new wxColourPickerCtrl(this, wxID_ANY, wxColour(255, 215, 0));
     m_goldenLineColorPicker->SetToolTip("Choose the color for the golden ratio lines.");
     gridSizer->Add(goldenLineColorLabel, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
     gridSizer->Add(m_goldenLineColorPicker, 0, wxEXPAND | wxALL, 5);
 
     // Toolbar Color Picker
     wxStaticText* toolbarColorLabel = new wxStaticText(this, wxID_ANY, "Toolbar Color:");
-    m_toolbarColorPicker = new wxColourPickerCtrl(this, wxID_ANY, *wxYELLOW);   //wxSystemSettings::GetColour(wxSYS_COLOUR_TOOLBAR)); // Default toolbar color
+    m_toolbarColorPicker = new wxColourPickerCtrl(this, wxID_ANY, *wxYELLOW);
     m_toolbarColorPicker->SetToolTip("Choose the background color for the toolbar.");
     gridSizer->Add(toolbarColorLabel, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
     gridSizer->Add(m_toolbarColorPicker, 0, wxEXPAND | wxALL, 5);
+
+    // Frame Color Picker
+    wxStaticText* frameColorLabel = new wxStaticText(this, wxID_ANY, "Frame Color:");
+    m_frameColorPicker = new wxColourPickerCtrl(this, wxID_ANY, wxColour("#2f2f2f"));
+    m_frameColorPicker->SetToolTip("Choose the color for the frame.");
+    gridSizer->Add(frameColorLabel, 0, wxALIGN_CENTER_VERTICAL | wxALL, 5);
+    gridSizer->Add(m_frameColorPicker, 0, wxEXPAND | wxALL, 5);
 
     pMainSizer->Add(gridSizer, 0, wxALL | wxEXPAND, 15);
 
@@ -124,6 +132,7 @@ void DlgGridOptions::on_accept_button(wxCommandEvent& WXUNUSED(event))
     m_gridLineColour = m_gridLineColorPicker->GetColour();
     m_goldenLineColour = m_goldenLineColorPicker->GetColour();
     m_toolbarColour = m_toolbarColorPicker->GetColour();
+    m_frameColour = m_frameColorPicker->GetColour();
 
     EndDialog(wxID_OK);
 }

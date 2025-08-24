@@ -50,6 +50,7 @@ private:
     void on_tool_lock_aspect_ratio(wxCommandEvent& event);
     void on_tool_show_grid(wxCommandEvent& event);
     void on_tool_show_golden_lines(wxCommandEvent& event);
+    void on_tool_show_frame(wxCommandEvent& event);
     void on_about(wxCommandEvent& WXUNUSED(event));
 
     //helpers for building
@@ -76,7 +77,7 @@ private:
 
     //other helpers
     void compute_aspect_ratio();
-
+    void change_black_colours();
 
 private:
     //GUI layout
@@ -112,6 +113,11 @@ private:
     // Golden lines
     bool m_fDrawGoldenLines = true;
     wxColour m_goldenLinesColour;
+
+    // Frame around the grid
+    bool m_fDrawFrame = false;
+    int  m_frameThickness = 40;
+    wxColour m_frameColour = wxColour("#2f2f2f");
 
     // Aspect Ratio lock properties
     double m_aspectRatio = 1.0;          //defined as Width / Height

@@ -57,6 +57,7 @@ enum
     k_evt_lock_aspect_ratio,
     k_evt_show_grid,
     k_evt_show_golden_lines,
+    k_evt_show_frame,
     k_evt_about,
     k_evt_quit,
 
@@ -110,33 +111,37 @@ void MainFrame::create_toolbar()
         k_bmp_hide_grid,
         k_bmp_show_golden_lines,
         k_bmp_hide_golden_lines,
+        k_bmp_show_frame,
+        k_bmp_hide_frame,
         k_bmp_about,
         k_bmp_quit,
         //
         k_bmp_max
     };
 
-    // Create a bitmap bundle from the SVG file, with a 32x32 reference size
+    // Create a bitmap bundle from the SVG file
     wxString sResPath = wxGetApp().get_resources_path();
     wxLogMessage("[MainFrame::create_toolbar] icons path '%s'", sResPath);
-    wxSize iconsSize(32,32);
+    wxSize iconsSize(28,28);
     wxVector<wxBitmapBundle> bitmaps(k_bmp_max);
     bitmaps[k_bmp_grid_options] = wxBitmapBundle::FromSVGFile(sResPath + "options.svg", iconsSize);
     bitmaps[k_bmp_set_aspect_ratio] = wxBitmapBundle::FromSVGFile(sResPath + "set-aspect-ratio.svg", iconsSize);
-    bitmaps[k_bmp_quit] = wxBitmapBundle::FromSVGFile(sResPath + "shutdown.svg", iconsSize);
     bitmaps[k_bmp_unlocked_aspect_ratio]= wxBitmapBundle::FromSVGFile(sResPath + "aspect-ratio-unlocked.svg", iconsSize);
     bitmaps[k_bmp_locked_aspect_ratio]= wxBitmapBundle::FromSVGFile(sResPath + "aspect-ratio-locked.svg", iconsSize);
     bitmaps[k_bmp_show_grid]= wxBitmapBundle::FromSVGFile(sResPath + "grid-on.svg", iconsSize);
     bitmaps[k_bmp_hide_grid]= wxBitmapBundle::FromSVGFile(sResPath + "grid-off.svg", iconsSize);
     bitmaps[k_bmp_show_golden_lines]= wxBitmapBundle::FromSVGFile(sResPath + "golden-lines-on.svg", iconsSize);
     bitmaps[k_bmp_hide_golden_lines]= wxBitmapBundle::FromSVGFile(sResPath + "golden-lines-off.svg", iconsSize);
+    bitmaps[k_bmp_show_frame]= wxBitmapBundle::FromSVGFile(sResPath + "frame-on.svg", iconsSize);
+    bitmaps[k_bmp_hide_frame]= wxBitmapBundle::FromSVGFile(sResPath + "frame-off.svg", iconsSize);
     bitmaps[k_bmp_about]= wxBitmapBundle::FromSVGFile(sResPath + "about.svg", iconsSize);
+    bitmaps[k_bmp_quit] = wxBitmapBundle::FromSVGFile(sResPath + "shutdown.svg", iconsSize);
 
     // Create the custom toolbar panel
     m_toolbar = new ToolBar(this, k_id_toolbar, GetClientSize().GetWidth(), iconsSize, m_toolbarColour);
 
     // Add tools using the custom toolbar's methods
-    m_toolbar->add_tool(k_evt_grid_options, bitmaps[k_bmp_grid_options], "AGrilla options");
+    m_toolbar->add_tool(k_evt_grid_options, bitmaps[k_bmp_grid_options], "Options");
     m_toolbar->add_tool(k_evt_set_aspect_ratio, bitmaps[k_bmp_set_aspect_ratio], "Set aspect ratio");
     m_toolbar->add_check_tool(k_evt_lock_aspect_ratio,
                             bitmaps[k_bmp_unlocked_aspect_ratio],   // Normal state icon
@@ -153,6 +158,11 @@ void MainFrame::create_toolbar()
                             bitmaps[k_bmp_hide_golden_lines],   // Checked state icon
                             "Hide golden lines",                // Normal state tooltip
                             "Show golden lines");               // Checked state tooltip
+    m_toolbar->add_check_tool(k_evt_show_frame,
+                            bitmaps[k_bmp_show_frame],   // Normal state icon
+                            bitmaps[k_bmp_hide_frame],   // Checked state icon
+                            "Hide frame",                // Normal state tooltip
+                            "Show frame");               // Checked state tooltip
     m_toolbar->add_tool(k_evt_about, bitmaps[k_bmp_about], "About");
     m_toolbar->add_tool(k_evt_quit, bitmaps[k_bmp_quit], "Quit");
 
@@ -164,6 +174,12 @@ void MainFrame::create_toolbar()
     Bind(wxEVT_BUTTON, &MainFrame::on_tool_lock_aspect_ratio, this, k_evt_lock_aspect_ratio);
     Bind(wxEVT_BUTTON, &MainFrame::on_tool_show_grid, this, k_evt_show_grid);
     Bind(wxEVT_BUTTON, &MainFrame::on_tool_show_golden_lines, this, k_evt_show_golden_lines);
+    Bind(wxEVT_BUTTON, &MainFrame::on_tool_show_frame, this, k_evt_show_frame);
+
+    //Set initial state
+    m_toolbar->set_tool_checked(k_evt_show_grid, !m_fDrawGrid);
+    m_toolbar->set_tool_checked(k_evt_show_golden_lines, !m_fDrawGoldenLines);
+    m_toolbar->set_tool_checked(k_evt_show_frame, !m_fDrawFrame);
 
     m_toolbarHeight = m_toolbar->get_size().GetHeight();
 }
@@ -213,6 +229,7 @@ void MainFrame::on_quit(wxCommandEvent& WXUNUSED(event))
     pPrefs->Write("/Grid/LineColor", m_gridLinesColour.GetAsString(wxC2S_HTML_SYNTAX));
     pPrefs->Write("/Grid/GoldenLinesColor", m_goldenLinesColour.GetAsString(wxC2S_HTML_SYNTAX));
     pPrefs->Write("/Grid/ToolbarColor", m_toolbarColour.GetAsString(wxC2S_HTML_SYNTAX));
+    pPrefs->Write("/Grid/FrameColor", m_frameColour.GetAsString(wxC2S_HTML_SYNTAX));
 
     Close(true);
 }
@@ -237,11 +254,11 @@ void MainFrame::draw_all_content()
     wxMemoryDC dc;
     dc.SelectObject(m_bmpMask);
 
-    // Set the background color to black (all window will be transparent).
-    dc.SetBackground(*wxBLACK);
+    // Set the background color to black or to frame colour.
+    dc.SetBackground(m_fDrawFrame ? m_frameColour : *wxBLACK);
     dc.Clear();
 
-    // Draw the mid-grey rectangle at the top, for the toolbar.
+    // Draw the coloured rectangle at the top, for the toolbar.
     dc.SetBrush(wxBrush(m_toolbarColour));
     dc.SetPen(*wxTRANSPARENT_PEN);
     dc.DrawRectangle(0, 0, size.GetWidth(), m_toolbarHeight);
@@ -249,8 +266,20 @@ void MainFrame::draw_all_content()
     // Define the bottom rectangle where the grid will be drawn.
     m_clientRect = wxRect(0, m_toolbarHeight, size.GetWidth(), size.GetHeight() - m_toolbarHeight);
 
-    // Define the grid area. For now it is going to be the client area
+    // Define the grid area and draw the frame
     m_gridRect = m_clientRect;
+    if (m_fDrawFrame)
+    {
+        m_gridRect.Deflate(m_frameThickness);
+
+        //make the grid area transparent
+//        dc.SetBrush(wxBrush(m_frameColour));
+//        dc.SetPen(*wxTRANSPARENT_PEN);
+//        dc.DrawRectangle(m_clientRect.GetLeft(), m_clientRect.GetTop(), m_clientRect.GetWidth(), m_clientRect.GetHeight());
+        dc.SetBrush(wxBrush(*wxBLACK));
+        dc.SetPen(*wxTRANSPARENT_PEN);
+        dc.DrawRectangle(m_gridRect.GetLeft(), m_gridRect.GetTop(), m_gridRect.GetWidth(), m_gridRect.GetHeight());
+    }
 
 //    wxLogMessage("[MainFrame::draw_all_content] client=(%d,%d,%d,%d), grid=(%d,%d,%d,%d)",
 //        m_clientRect.x, m_clientRect.y, m_clientRect.width, m_clientRect.height,
@@ -297,7 +326,18 @@ void MainFrame::get_grid_options()
     pPrefs->Read("/Grid/ToolbarColor", &sToolbarColour, "#49B04A");
     m_toolbarColour.Set(sToolbarColour);
 
-    //Don't allow black as it will transformed into transparent
+    wxString sFrameColour("#2F2F2F");
+    pPrefs->Read("/Grid/FrameColor", &sFrameColour, "#2F2F2F");
+    m_frameColour.Set(sFrameColour);
+
+    change_black_colours();
+}
+
+//---------------------------------------------------------------------------------------
+void MainFrame::change_black_colours()
+{
+    //Don't allow black colour as it will transformed into transparent
+
     if (m_goldenLinesColour == *wxBLACK)
         m_goldenLinesColour = wxColour("#000005");
 
@@ -306,6 +346,9 @@ void MainFrame::get_grid_options()
 
     if (m_toolbarColour == *wxBLACK)
         m_toolbarColour = wxColour("#000005");
+
+    if (m_frameColour == *wxBLACK)
+        m_frameColour = wxColour("#000005");
 }
 
 //---------------------------------------------------------------------------------------
@@ -388,27 +431,27 @@ void MainFrame::draw_resize_handlers(wxDC& dc)
 
         //right handle
         m_rightHandle = wxRect(m_gridRect.GetRight() - m_handlerSide,
-                               m_gridRect.GetHeight() / 2 - halfHandle + m_toolbarHeight,
+                               m_gridRect.GetTop() + m_gridRect.GetHeight() / 2 - halfHandle,
                                m_handlerSide, m_handlerSide);
         dc.DrawRectangle(m_rightHandle);
 
 
         //left handle
         m_leftHandle  = wxRect(m_gridRect.GetLeft(),
-                               m_gridRect.GetHeight() / 2 - halfHandle + m_toolbarHeight,
+                               m_gridRect.GetTop() + m_gridRect.GetHeight() / 2 - halfHandle,
                                m_handlerSide, m_handlerSide);
         dc.DrawRectangle(m_leftHandle);
 
         //top handle
-        m_topHandle = wxRect(m_gridRect.GetWidth() / 2 - halfHandle,
-                               m_gridRect.GetTop(),
-                               m_handlerSide, m_handlerSide);
+        m_topHandle = wxRect(m_gridRect.GetLeft() + m_gridRect.GetWidth() / 2 - halfHandle,
+                             m_gridRect.GetTop(),
+                             m_handlerSide, m_handlerSide);
         dc.DrawRectangle(m_topHandle);
 
         //bottom handle
-        m_bottomHandle = wxRect(m_gridRect.GetWidth() / 2 - halfHandle,
-                               m_gridRect.GetBottom() - m_handlerSide,
-                               m_handlerSide, m_handlerSide);
+        m_bottomHandle = wxRect(m_gridRect.GetLeft() + m_gridRect.GetWidth() / 2 - halfHandle,
+                                m_gridRect.GetBottom() - m_handlerSide,
+                                m_handlerSide, m_handlerSide);
         dc.DrawRectangle(m_bottomHandle);
     }
 }
@@ -706,7 +749,7 @@ void MainFrame::on_about(wxCommandEvent& WXUNUSED(event))
 void MainFrame::on_tool_grid_options(wxCommandEvent& WXUNUSED(event))
 {
     DlgGridOptions dlg(this, m_gridSize, m_gridLineThickness, m_gridLinesColour,
-                       m_goldenLinesColour, m_toolbarColour);
+                       m_goldenLinesColour, m_toolbarColour, m_frameColour);
 
     if (dlg.ShowModal() == wxID_OK)
     {
@@ -715,20 +758,11 @@ void MainFrame::on_tool_grid_options(wxCommandEvent& WXUNUSED(event))
         m_gridLinesColour = dlg.get_grid_line_color();
         m_goldenLinesColour = dlg.get_golden_line_color();
         m_toolbarColour = dlg.get_toolbar_color();
+        m_frameColour = dlg.get_frame_color();
+        change_black_colours();
+
         m_fBitmapIsInvalid = true;
-
-        //Don't allow black as it will transformed into transparent
-        if (m_goldenLinesColour == *wxBLACK)
-            m_goldenLinesColour = wxColour("#000005");
-
-        if (m_gridLinesColour == *wxBLACK)
-            m_gridLinesColour = wxColour("#000005");
-
-        if (m_toolbarColour == *wxBLACK)
-            m_toolbarColour = wxColour("#000005");
-
         m_toolbar->change_colour(m_toolbarColour);
-
         Refresh();  //trigger repaint
     }
 }
@@ -752,6 +786,22 @@ void MainFrame::on_tool_set_aspect_ratio(wxCommandEvent& WXUNUSED(event))
 void MainFrame::on_tool_lock_aspect_ratio(wxCommandEvent& event)
 {
     m_fAspectRatioLocked = event.IsChecked();
+}
+
+//---------------------------------------------------------------------------------------
+void MainFrame::on_tool_show_frame(wxCommandEvent& event)
+{
+    m_fDrawFrame = !event.IsChecked();
+
+    wxSize size = GetSize();
+    wxPoint pos = GetPosition();
+    pos.x += (m_fDrawFrame ? -m_frameThickness : m_frameThickness);
+    pos.y += (m_fDrawFrame ? -m_frameThickness : m_frameThickness);
+    m_fDrawFrame ? size.IncBy(2*m_frameThickness) : size.DecBy(2*m_frameThickness);
+    SetSize(size);
+    SetPosition(pos);
+    m_fBitmapIsInvalid = true;
+    Refresh();
 }
 
 //---------------------------------------------------------------------------------------

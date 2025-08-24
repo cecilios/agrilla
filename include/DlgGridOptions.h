@@ -26,13 +26,14 @@ class DlgGridOptions : public wxDialog
 public:
     DlgGridOptions(wxWindow* parent, int gridSegments, int lineThickness,
                    const wxColour gridLinesColour, const wxColour goldenLinesColour,
-                   const wxColour toolbarColour);
+                   const wxColour toolbarColour, const wxColour frameColour);
 
     int get_segments() { return m_numGridSegments; }
     int get_line_thickness() { return m_lineThickness; }
     wxColor& get_grid_line_color() { return m_gridLineColour; }
     wxColor& get_golden_line_color() { return m_goldenLineColour; }
     wxColor& get_toolbar_color() { return m_toolbarColour; }
+    wxColor& get_frame_color() { return m_frameColour; }
 
 private:
     // UI controls
@@ -41,6 +42,7 @@ private:
     wxColourPickerCtrl* m_gridLineColorPicker;
     wxColourPickerCtrl* m_goldenLineColorPicker;
     wxColourPickerCtrl* m_toolbarColorPicker;
+    wxColourPickerCtrl* m_frameColorPicker;
 
     // Internal data members
     long        m_numGridSegments;
@@ -48,6 +50,7 @@ private:
     wxColor     m_goldenLineColour;
     int         m_lineThickness;
     wxColour    m_toolbarColour;
+    wxColour    m_frameColour;
 
     // Private methods
     void create_dialog();

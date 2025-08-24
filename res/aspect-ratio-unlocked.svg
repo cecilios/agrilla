@@ -7,7 +7,7 @@
    id="svg3304"
    sodipodi:version="0.32"
    inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
-   sodipodi:docname="unlocked-aspect-ratio.svg"
+   sodipodi:docname="aspect-ratio-unlocked.svg"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    version="1.1"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -300,7 +300,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="11.313708"
-     inkscape:cx="30.670758"
+     inkscape:cx="22.892583"
      inkscape:cy="23.511302"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -310,7 +310,7 @@
      showborder="false"
      inkscape:window-width="1350"
      inkscape:window-height="901"
-     inkscape:window-x="122"
+     inkscape:window-x="417"
      inkscape:window-y="66"
      showguides="true"
      inkscape:guide-bbox="true"
@@ -364,7 +364,8 @@
   <g
      id="layer1"
      inkscape:label="Layer 1"
-     inkscape:groupmode="layer">
+     inkscape:groupmode="layer"
+     transform="matrix(1,0,0,1.1124662,-0.16947754,-1.2016128)">
     <rect
        style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        id="rect4784"
@@ -374,7 +375,7 @@
        y="0.1178817" />
     <path
        style="fill:url(#linearGradient5147);fill-opacity:1;fill-rule:evenodd;stroke:#888a85;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1"
-       d="M 4.8686007,7.2034111 H 42.997435 c 2.025119,0 3.500978,1.4276545 3.500978,3.6261409 l 0.01095,26.203839 c 0,1.692067 -0.528347,2.215229 -2.034656,2.215229 L 3.512038,39.229685 C 2.3327667,39.200892 1.4934425,38.735024 1.477609,37.210382 l 0.015177,-26.568575 c 0,-1.7738255 1.5394074,-3.4383959 3.3758149,-3.4383959 z"
+       d="M 4.8686007,7.2034111 H 42.997435 c 2.025119,0 3.500978,1.4276545 3.500978,3.6261409 l 0.01095,26.203839 c 0,1.692067 -0.528347,2.215229 -2.034656,2.215229 L 3.512038,39.229685 C 2.3327667,39.200892 1.4934425,38.735024 1.477609,37.210382 L 1.492786,10.641807 c 0,-1.7738255 1.5394074,-3.4383959 3.3758147,-3.4383959 z"
        id="rect5040"
        sodipodi:nodetypes="ccccccccc" />
     <rect

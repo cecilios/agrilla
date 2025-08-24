@@ -1,23 +1,141 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" height="48" width="48">
-<defs>
-<radialGradient id="b" gradientUnits="userSpaceOnUse" cy="28.46" cx="26.54" gradientTransform="matrix(1.156 .005968 -.005968 1.261 -4.845 -7.341)" r="22.38">
-<stop stop-color="#9cbcde" offset="0"/>
-<stop stop-color="#204a87" offset="1"/>
-</radialGradient>
-<radialGradient id="a" gradientUnits="userSpaceOnUse" cy="17.68" cx="-9.5" gradientTransform="matrix(4.446 0 0 6.866 67.3-104.4)" r="8.75">
-<stop stop-color="#fff" offset="0"/>
-<stop stop-color="#b8b8b8" offset="1"/>
-</radialGradient>
-<radialGradient id="c" gradientUnits="userSpaceOnUse" cy="42" cx="31.55" gradientTransform="matrix(1 0 0 .3333 -7.55 28)" r="18">
-<stop offset="0"/>
-<stop stop-opacity="0" offset="1"/>
-</radialGradient>
-</defs>
-<ellipse opacity="0.63" rx="18" ry="6" cy="42" cx="24" fill="url(#c)"/>
-<circle cy="24" cx="24" r="21.5" fill="#204a87"/>
-<g stroke-linejoin="round" stroke="#fff">
-<circle stroke-opacity=".94" r="18.6" cy="24" cx="24" stroke-width="2.5" fill="url(#b)"/>
-<path stroke-width=".8" d="m21.5 19.4h5v15.9h-5v-15.9zm0-6.6h5v4.2h-5v-4.2z" stroke-opacity=".78" fill="url(#a)"/>
-</g>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   id="svg1306"
+   height="48px"
+   width="48px"
+   version="1.1"
+   sodipodi:docname="about-2.svg"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <sodipodi:namedview
+     id="namedview1977"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="12.91943"
+     inkscape:cx="20.743949"
+     inkscape:cy="23.607853"
+     inkscape:window-width="1390"
+     inkscape:window-height="981"
+     inkscape:window-x="73"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg1306" />
+  <defs
+     id="defs1308">
+    <radialGradient
+       id="radialGradient3976"
+       gradientUnits="userSpaceOnUse"
+       cy="40"
+       cx="23.857"
+       gradientTransform="matrix(1 0 0 .5 0 20)"
+       r="17.143">
+      <stop
+         id="stop4128"
+         offset="0" />
+      <stop
+         id="stop4130"
+         stop-opacity="0"
+         offset="1" />
+    </radialGradient>
+    <linearGradient
+       id="linearGradient3980"
+       y2="-8.5627"
+       gradientUnits="userSpaceOnUse"
+       x2="20.065"
+       y1="53.836"
+       x1="43.936">
+      <stop
+         id="stop2481"
+         stop-color="#ffe69b"
+         offset="0" />
+      <stop
+         id="stop2483"
+         stop-color="#fff"
+         offset="1" />
+    </linearGradient>
+  </defs>
+  <metadata
+     id="metadata1311">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Rodney Dawes</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:contributor>
+          <cc:Agent>
+            <dc:title>Jakub Steiner, Garrett LeSage</dc:title>
+          </cc:Agent>
+        </dc:contributor>
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/by-sa/2.0/" />
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/by-sa/2.0/">
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/Reproduction" />
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/Distribution" />
+        <cc:requires
+           rdf:resource="http://web.resource.org/cc/Notice" />
+        <cc:requires
+           rdf:resource="http://web.resource.org/cc/Attribution" />
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/DerivativeWorks" />
+        <cc:requires
+           rdf:resource="http://web.resource.org/cc/ShareAlike" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     style="fill:#ffffff;fill-opacity:1">
+    <g
+       id="g4006"
+       style="fill:#ffffff;fill-opacity:1">
+      <path
+         id="path1314"
+         d="m46.857 23.929c0 12.9-10.457 23.357-23.357 23.357s-23.357-10.457-23.357-23.357 10.457-23.357 23.357-23.357 23.357 10.457 23.357 23.357z"
+         transform="matrix(.92049 0 0 .92049 2.3685 .97408)"
+         stroke="#204a87"
+         stroke-width="1.0864"
+         fill="#3465a4"
+         style="fill:#ffffff;stroke:#000000;stroke-opacity:1;fill-opacity:1" />
+    </g>
+  </g>
+  <g
+     id="layer3"
+     fill="#fff">
+    <g
+       id="g13674"
+       transform="translate(2.8959 -3.6973)">
+      <path
+         id="text3246"
+         d="m21.104 13.697c-0.86423 0.01942-1.5754 0.30821-2.1336 0.86638-0.55819 0.55821-0.84699 1.2694-0.86638 2.1336 0.01939 0.86424 0.30819 1.5754 0.86638 2.1336 0.55818 0.55821 1.2694 0.847 2.1336 0.86638 0.86422-0.01938 1.5754-0.30817 2.1336-0.86638 0.55818-0.55817 0.84697-1.2694 0.86638-2.1336-0.01941-0.8642-0.3082-1.5754-0.86638-2.1336-0.5582-0.55817-1.2694-0.84696-2.1336-0.86638z"
+         style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-opacity:1" />
+      <path
+         id="path13678"
+         d="m15.104 21.697v3h2c0.55228 0 1 0.44772 1 1v9c0 0.55228-0.44772 1-1 1h-2v3h12v-3h-2c-0.55228 0-1-0.44772-1-1v-13h-9z"
+         style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-opacity:1" />
+    </g>
+  </g>
 </svg>
