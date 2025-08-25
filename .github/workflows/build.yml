@@ -3,10 +3,9 @@
 name: Build the MSI Package
 
 on:
-  workflow_call:
   # push:
   #   branches: [ "main" ]
-  # workflow_dispatch:
+  workflow_dispatch:
 
 jobs:
   build:
