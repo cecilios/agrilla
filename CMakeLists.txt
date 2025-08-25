@@ -37,7 +37,7 @@
 ##   cmake -DCMAKE_INSTALL_PREFIX=~/programs ..
 #
 #-------------------------------------------------------------------------------------
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.19)
 project(agrilla VERSION 1.0.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 11)
@@ -168,8 +168,9 @@ set(CPACK_PACKAGE_DESCRIPTION
  AGrilla is distributed under the MIT license.
 ")
 
-# CPack configuration for Debian package
+# CPack configuration for every platform
 if(UNIX AND NOT APPLE)
+    # CPack configuration to generate a Linux .deb package
     set(CPACK_GENERATOR "DEB")
     set(CPACK_DEBIAN_PACKAGE_SECTION "graphics")
     if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "^x86_64$|^amd64$")  
@@ -184,6 +185,22 @@ if(UNIX AND NOT APPLE)
     set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Cecilio Salmeron <s.cecilio@gmail.com>")
     set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://github.com/cecilios/agrilla")
     set(CPACK_STRIP_FILES ON)        #remove debug information, if any, from binaries
+
+elseif(WIN32)
+#    # CPack configuration to generate a Windows .msi installer
+#    set(CPACK_GENERATOR "WIX")
+#    string(CONCAT CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}"
+#            "_${CPACK_PACKAGE_VERSION}")
+#
+#    # This is the AGrilla GUID. Do not change!
+#    set(CPACK_WIX_PRODUCT_GUID "18b6f21d-86d0-486e-a2d8-09871e97714e")
+#    # Generate a GUID for the package version
+#    string(UUID CPACK_WIX_UPGRADE_GUID
+#           NAMESPACE DNS
+#           NAME "${CPACK_PACKAGE_FILE_NAME}"
+#           TYPE TIME)
+#    message("GUID generado: ${CPACK_WIX_UPGRADE_GUID}")
+
 endif()
 
 # Must be after the last CPACK macro

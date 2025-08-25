@@ -1,0 +1,57 @@
+# This workflow generates the Windows installer (MSI)
+# It must be executed manually
+name: Build the MSI Package
+
+on:
+  workflow_call:
+  #push:
+  #  branches: [ "main" ]
+  #workflow_dispatch:
+
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    runs-on: windows-latest
+
+    steps:
+    # Checks-out the repository under ${{ github.workspace }}, so the job can access it
+    - name: Checkout repo
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0      #important for WiX working properly
+
+    - name: Install dependencies on Windows
+      run: |
+        choco install ninja cmake
+#        ninja --version
+        cmake --version
+        choco install wixtoolset --version 3.14.0.6528 -y   # exact version: reproducibility
+#        choco install wixtoolset --version 3.14 -y        # only main version: potential incompatibilities
+#        choco install wixtoolset -y                       # no version: maximum flexibility
+        echo "C:\Program Files (x86)\WiX Toolset v3.14\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+    - name: Configure CMake
+      run: |
+        # Create a folder 'build' out of the source tree
+        mkdir build
+        cd build
+        # Configure CMake
+        cmake .. -G "Visual Studio 17 2022" -A x64
+      working-directory: ${{ github.workspace }}
+
+    - name: Build CMake project
+      run: |
+        # Build AGrilla for 'Release'
+        cmake --build . --config Release
+      working-directory: ${{ github.workspace }}/build
+
+    - name: Generate the MSI package
+      run: |
+        msbuild "agrilla.wixproj" /p:Configuration=Release
+
+    - name: Upload MSI package
+      uses: actions/upload-artifact@v4
+      with:
+        name: agrilla-msi-installer
+        path: bin\Release\agrilla.msi
+
