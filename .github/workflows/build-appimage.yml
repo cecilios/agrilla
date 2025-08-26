@@ -50,10 +50,15 @@ jobs:
           chmod +x linuxdeploy-x86_64.AppImage
 
       - name: Generate AppImage
-        run: ./linuxdeploy-x86_64.AppImage --appdir AppDir --output appimage
+        id: appimage_gen
+        run: |
+          ./linuxdeploy-x86_64.AppImage --appdir AppDir --output appimage
+          # Find the exact filename and set it as an output variable
+          appimage_file=$(ls *.AppImage)
+          echo "APPIMAGE_FILE=$appimage_file" >> $GITHUB_OUTPUT
 
       - name: Upload AppImage as artifact
         uses: actions/upload-artifact@v4
         with:
           name: AppImage
-          path: *.AppImage
+          path: ${{ steps.appimage_gen.outputs.APPIMAGE_FILE }}
