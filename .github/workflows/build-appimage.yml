@@ -42,12 +42,10 @@ jobs:
 
       - name: Install files into AppDir
         run: |
-          cmake --install ./z_build-appimage \
+          DESTDIR=./AppDir cmake --install ./z_build-appimage \
             --prefix /usr \
-            --component all \
             --strip \
-            --verbose \
-            --destdir ./AppDir
+            --verbose
 
       - name: Download linuxdeploy
         run: |
