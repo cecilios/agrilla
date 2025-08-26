@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+GenericName=Screen Grid
+Name=AGrilla
+Comment=Tool to overlay a grid over any screen region
+Exec=agrilla
+Icon=agrilla-logo
+Terminal=false
+Type=Application
+Categories=Utility;Graphics;
+

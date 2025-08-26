@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+    <id>agrilla</id>
+    <metadata_license>MIT</metadata_license>
+    <project_license>MIT</project_license>
+    <name>AGrilla</name>
+    <summary>A tool to overlay a grid over any screen region</summary>
+    <summary xml:lang="es">Una herramienta para superponer una cuadrícula en
+        cualquier zona de la pantalla</summary>
+
+    <description>
+        <p>AGrilla is a tool to overlay a grid over any screen region, providing
+           a guide to help you in your composition and drawing.
+        </p>
+        <p>AGrilla helps artists to create accurate and detailed drawings using
+           the grid method. It is also of help in composition when using the
+           rule of thirds or the golden ratio.
+        </p>
+        <p>AGrilla is distributed under the MIT license.
+        </p>
+    </description>
+    <icon type="stock">agrilla-logo</icon>
+
+    <launchable type="desktop-id">agrilla.desktop</launchable>
+
+    <url type="homepage">https://github.com/cecilios/agrilla</url>
+    <url type="bugtracker">https://github.com/cecilios/agrilla/issues</url>
+    <url type="help">https://github.com/cecilios/agrilla/issues</url>
+
+    <screenshots>
+        <screenshot type="default">
+            <image>https://github.com/cecilios/agrilla/docs/images/screenshot.jpg</image>
+            <caption/>
+        </screenshot>
+    </screenshots>
+
+    <developer_name>Cecilio Salmeron</developer_name>
+    <update_contact>s.cecilio_at_gmail.org</update_contact>
+    <categories>
+        <category>Utility</category>
+        <category>Graphics</category>
+    </categories>
+    <provides>
+        <id>agrilla.desktop</id>
+    </provides>
+</component>
+

@@ -143,6 +143,13 @@ endif()
 install(TARGETS agrilla DESTINATION bin)
 install(FILES ${RESOURCE_FILES} DESTINATION share/agrilla/res)
 
+if (UNIX AND NOT APPLE)
+    # Install desktop entry, icon and AppStream upstream metadata
+    install(FILES res/agrilla.desktop DESTINATION share/applications)
+    install(FILES res/agrilla-logo.svg DESTINATION share/icons/hicolor/scalable/apps/)
+    install(FILES res/agrilla.appdata.xml DESTINATION share/metainfo)
+endif(UNIX AND NOT APPLE)
+
 
 #///////////////////////////////////////////////////////////////////////////////
 # CPack section: installers generation
@@ -178,13 +185,15 @@ if(UNIX AND NOT APPLE)
     else()
       set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "i386")
     endif() 
-    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libwxbase3.2-1t64, libwxgtk3.2-1t64")
+    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libwxbase3.2-1t64 (>= 3.2.0), libwxgtk3.2-1t64 (>= 3.2.0)")
     string(CONCAT CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}"
             "_${CPACK_PACKAGE_VERSION}_${CPACK_DEBIAN_PACKAGE_ARCHITECTURE}")
 
     set(CPACK_DEBIAN_PACKAGE_MAINTAINER "Cecilio Salmeron <s.cecilio@gmail.com>")
     set(CPACK_DEBIAN_PACKAGE_HOMEPAGE "https://github.com/cecilios/agrilla")
     set(CPACK_STRIP_FILES ON)        #remove debug information, if any, from binaries
+    set(CPACK_PACKAGE_EXECUTABLES "agrilla" "AGrilla")      #To create Start Menu shortcut
+
 
 elseif(WIN32)
 #    # CPack configuration to generate a Windows .msi installer
