@@ -147,7 +147,7 @@ if (UNIX AND NOT APPLE)
     # Install desktop entry, icon and AppStream upstream metadata
     install(FILES res/agrilla.desktop DESTINATION share/applications)
     install(FILES res/agrilla-logo.svg DESTINATION share/icons/hicolor/scalable/apps/)
-    install(FILES res/agrilla.appdata.xml DESTINATION share/metainfo)
+    install(FILES res/com.github.cecilios.agrilla.appdata.xml DESTINATION share/metainfo)
 endif(UNIX AND NOT APPLE)
 
 

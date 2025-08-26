@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-    <id>agrilla</id>
+    <id>com.github.cecilios.agrilla</id>
     <metadata_license>MIT</metadata_license>
     <project_license>MIT</project_license>
     <name>AGrilla</name>
     <summary>A tool to overlay a grid over any screen region</summary>
-    <summary xml:lang="es">Una herramienta para superponer una cuadrícula en
-        cualquier zona de la pantalla</summary>
-
+    <summary xml:lang="es">Una herramienta para superponer una cuadrícula en cualquier zona de la pantalla</summary>
     <description>
         <p>AGrilla is a tool to overlay a grid over any screen region, providing
            a guide to help you in your composition and drawing.
@@ -20,7 +18,15 @@
         </p>
     </description>
     <icon type="stock">agrilla-logo</icon>
-
+    <content_rating type="oars-1.0">
+        <url>https://www.oars.org/find-ratings/</url>
+        <control>
+          <none/>
+        </control>
+        <violence>
+          <level>none</level>
+        </violence>
+      </content_rating>
     <launchable type="desktop-id">agrilla.desktop</launchable>
 
     <url type="homepage">https://github.com/cecilios/agrilla</url>
@@ -29,12 +35,14 @@
 
     <screenshots>
         <screenshot type="default">
-            <image>https://github.com/cecilios/agrilla/docs/images/screenshot.jpg</image>
+            <image>https://github.com/cecilios/agrilla/blob/main/docs/images/screenshot.jpg</image>
             <caption/>
         </screenshot>
     </screenshots>
 
-    <developer_name>Cecilio Salmeron</developer_name>
+    <developer>
+        <name>Cecilio Salmeron</name>
+    </developer>
     <update_contact>s.cecilio_at_gmail.org</update_contact>
     <categories>
         <category>Utility</category>
