@@ -19,7 +19,12 @@ jobs:
       - name: Set up build environment (wxWidgets dependencies)
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake g++ libwxbase3.2-1t64 libwxgtk3.2-1t64 
+          # Install development packages depending on Ubuntu version
+          if grep -q "Ubuntu 22.04" /etc/os-release; then
+            sudo apt-get install -y cmake g++ libwxgtk3.0-gtk3-dev
+          else
+            sudo apt-get install -y cmake g++ libwxgtk3.2-dev libwxgtk-webview3.2-dev
+          fi
 
       - name: Create build directory
         run: mkdir z_build-appimage
