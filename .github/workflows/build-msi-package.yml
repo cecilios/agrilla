@@ -43,9 +43,9 @@ jobs:
           cd build
           $wxwin = "C:\ProgramData\chocolatey\lib\wxwidgets\tools"
           Write-Host "Using wxWidgets path: $wxwin"
-          cmake .. -G "Visual Studio 17 2022" -A x64 ^
-            -DwxWidgets_USE_LIBS="core;base;html" ^
-            -DwxWidgets_INCLUDE_DIRS="$wxwin\include" ^
+          cmake .. -G "Visual Studio 17 2022" -A x64 `
+            -DwxWidgets_USE_LIBS="core;base;html" `
+            -DwxWidgets_INCLUDE_DIRS="$wxwin\include" `
             -DwxWidgets_LIBRARIES="$wxwin\lib\vc_lib"
         working-directory: ${{ github.workspace }}
 
