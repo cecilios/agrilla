@@ -22,9 +22,11 @@ jobs:
           choco install cmake -y
           cmake --version
           choco install wixtoolset -y
-          choco install wxwidgets -y
           $wixPath = (Get-ChildItem "C:\Program Files (x86)\WiX Toolset v*" | Sort-Object LastWriteTime -Descending | Select-Object -First 1).FullName
           echo "$wixPath\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          choco install wxwidgets -y
+          $wxwin = (Get-ChildItem "C:\Program Files\wxWidgets*" | Sort-Object LastWriteTime -Descending | Select-Object -First 1).FullName
+          echo "WXWIN=$wxwin" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Configure CMake
         run: |
