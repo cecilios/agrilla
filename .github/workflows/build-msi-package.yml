@@ -39,14 +39,14 @@ jobs:
       # Configure CMake
       - name: Configure CMake
         run: |
+          Write-Host "The value of WXWIN is: $env:WXWIN"
           mkdir build
           cd build
-          cmake .. -G "Visual Studio 17 2022" -A x64
+          cmake .. -G "Visual Studio 17 2022" -A x64 `
+            -DwxWidgets_ROOT_DIR="$env:WXWIN" `
+            -DwxWidgets_LIB_DIR="$env:WXWIN/lib/vc_lib" `
+            -DwxWidgets_INCLUDE_DIRS="$env:WXWIN/include"
         working-directory: ${{ github.workspace }}
-      # Build CMake project
-      - name: Build CMake project
-        run: cmake --build . --config Release
-        working-directory: ${{ github.workspace }}/build
 
       # Generate the MSI package
       - name: Generate the MSI package
