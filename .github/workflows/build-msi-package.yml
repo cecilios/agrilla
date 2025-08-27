@@ -25,6 +25,11 @@ jobs:
           cmake --version
           choco install wixtoolset -y
           choco install wxwidgets -y
+          # Check the actual installation path used by Chocolatey
+          $wxwidgetsPath = (choco list --local-only --exact --id wxwidgets).Split(' ')[1]
+          Write-Host "The wxWidgets package was installed at: $wxwidgetsPath"
+          # The next line is for setting the environment variable, if you want to use it
+          echo "WXWIN=$wxwidgetsPath\tools" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           # Add WiX to PATH for this step and subsequent steps
           $wixPath = (Get-ChildItem "C:\Program Files (x86)\WiX Toolset v*" | Sort-Object LastWriteTime -Descending | Select-Object -First 1).FullName
           echo "$wixPath\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
