@@ -1,32 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Id="*"
-           Name="AGrilla"
-           Language="1033"
-           Version="1.0.0"
-           Manufacturer="AGrilla Developers"
+  <Product Id="*" 
+           Name="AGrilla" 
+           Language="1033" 
+           Version="1.0.0" 
+           Manufacturer="AGrilla Developers" 
            UpgradeCode="18b6f21d-86d0-486e-a2d8-09871e97714e">
 
-    <Package Id="*"
-             InstallerVersion="200"
-             Compressed="yes"
-             Description="A simple program to manage aspect ratios and grids for graphical design."
+    <Package Id="*" 
+             InstallerVersion="200" 
+             Compressed="yes" 
+             Description="A tool to overlay a grid over any screen region."
              Manufacturer="AGrilla Developers"
-             InstallScope="perMachine" />
+             InstallScope="perUser" />
 
     <Media Id="1" Cabinet="media1.cab" EmbedCab="yes" />
 
+    <!-- Directory structure -->
     <Directory Id="TARGETDIR" Name="SourceDir">
-      <Directory Id="ProgramFilesFolder">
+      <Directory Id="LocalAppDataFolder">
         <Directory Id="INSTALLFOLDER" Name="AGrilla">
           <Directory Id="AppFolder" Name="bin" />
           <Directory Id="ResourcesFolder" Name="res" />
         </Directory>
       </Directory>
+      <Directory Id="ProgramMenuFolder" Name="Programs" />
+      <Directory Id="DesktopFolder" Name="Desktop" />
     </Directory>
 
+    <!-- Features -->
     <Feature Id="MainApplication" Title="AGrilla" Level="1">
       <ComponentGroupRef Id="ProductComponents" />
+      <ComponentGroupRef Id="ResourceComponents" />
+      <ComponentGroupRef Id="Shortcuts" />
     </Feature>
 
     <UI>
@@ -36,14 +42,18 @@
   </Product>
 
   <Fragment>
-    <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
-      <Component Id="*" Guid="*">
+    <!-- Main executable -->
+    <ComponentGroup Id="ProductComponents" Directory="AppFolder">
+      <Component Id="AppExecutable" Guid="*">
         <File Id="file_agrilla_exe"
-              Source="agrilla.exe"
+              Source="bin\Release\agrilla.exe"
               KeyPath="yes" />
       </Component>
+    </ComponentGroup>
 
-      <Component Id="*" Guid="*">
+    <!-- Resources -->
+    <ComponentGroup Id="ResourceComponents" Directory="ResourcesFolder">
+      <Component Id="SvgResources" Guid="*">
         <File Id="file_about_svg" Source="res\about.svg" />
         <File Id="file_aspect_locked" Source="res\aspect-ratio-locked.svg" />
         <File Id="file_aspect_unlocked" Source="res\aspect-ratio-unlocked.svg" />
@@ -57,7 +67,41 @@
         <File Id="file_set_aspect_ratio" Source="res\set-aspect-ratio.svg" />
         <File Id="file_shutdown" Source="res\shutdown.svg" />
       </Component>
-
     </ComponentGroup>
+
+    <!-- Shortcuts -->
+    <ComponentGroup Id="Shortcuts">
+      <!-- Start Menu Shortcut -->
+      <Component Id="StartMenuShortcut" Guid="*">
+        <Shortcut Id="AGrillaStartMenuShortcut"
+                  Name="AGrilla"
+                  Description="Launch AGrilla"
+                  Target="[INSTALLFOLDER]bin\agrilla.exe"
+                  WorkingDirectory="INSTALLFOLDER"
+                  Icon="agrillaIcon.ico"
+                  IconIndex="0"
+                  Directory="ProgramMenuFolder" />
+        <RegistryValue Root="HKCU" Key="Software\AGrilla" Name="installed" Type="integer" Value="1" KeyPath="yes"/>
+      </Component>
+
+      <!-- Desktop Shortcut -->
+      <Component Id="DesktopShortcut" Guid="*">
+        <Shortcut Id="AGrillaDesktopShortcut"
+                  Name="AGrilla"
+                  Description="Launch AGrilla"
+                  Target="[INSTALLFOLDER]bin\agrilla.exe"
+                  WorkingDirectory="INSTALLFOLDER"
+                  Icon="agrillaIcon.ico"
+                  IconIndex="0"
+                  Directory="DesktopFolder" />
+        <RegistryValue Root="HKCU" Key="Software\AGrilla" Name="installedDesktop" Type="integer" Value="1" KeyPath="yes"/>
+      </Component>
+    </ComponentGroup>
+
+    <!-- Icon definition -->
+    <Fragment>
+      <Icon Id="agrillaIcon.ico" SourceFile="res\agrilla-logo.ico" />
+    </Fragment>
   </Fragment>
 </Wix>
+

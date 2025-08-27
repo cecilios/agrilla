@@ -2,19 +2,31 @@
 <Project ToolsVersion="4.0"
          DefaultTargets="Build"
          xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
     <SchemaVersion>2.0</SchemaVersion>
     <OutputName>agrilla</OutputName>
     <OutputType>Package</OutputType>
     <OutputPath>bin\$(Configuration)\</OutputPath>
-    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath)' != '' AND '$(MSBuildExtensionsPath32)' != '' ">
+
+    <!-- Version-agnostic WiX targets resolution -->
+    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(WIXTARGETS)' != '' ">
+      $(WIXTARGETS)
+    </WixTargetsPath>
+
+    <!-- Fallback for local builds where env var is not set -->
+    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">
       $(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets
     </WixTargetsPath>
   </PropertyGroup>
+
   <ItemGroup>
     <Compile Include="agrilla.wxs" />
   </ItemGroup>
+
   <Import Project="$(WixTargetsPath)" />
+
 </Project>
+
