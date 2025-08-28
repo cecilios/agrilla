@@ -35,9 +35,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: wxWidgets
-          key: ${{ runner.os }}-wxwidgets-3.2.4-build-${{ hashFiles('build_wxwidgets/build/msw/wx_vc17.sln') }}
+          key: ${{ runner.os }}-wxwidgets-3.2.8-build-${{ hashFiles('build_wxwidgets/build/msw/wx_vc17.sln') }}
           restore-keys: |
-            ${{ runner.os }}-wxwidgets-3.2.4-build-
+            ${{ runner.os }}-wxwidgets-3.2.8-build-
 
       # Build wxWidgets from source if cache is missed
       - name: Build wxWidgets from source
@@ -47,12 +47,12 @@ jobs:
           echo "WXWIN=$env:GITHUB_WORKSPACE\wxWidgets" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           
           # Download wxWidgets source
-          # Replace 'v3.2.4' with your desired version tag
-          Invoke-WebRequest -Uri "https://github.com/wxWidgets/wxWidgets/releases/download/v3.2.4/wxWidgets-3.2.4-src.zip" -OutFile "wxWidgets.zip"
+          # Replace 'v3.2.8' with your desired version tag
+          Invoke-WebRequest -Uri "https://github.com/wxWidgets/wxWidgets/releases/download/v3.2.8/wxWidgets-3.2.8.zip -OutFile "wxWidgets.zip"
           Expand-Archive -Path "wxWidgets.zip" -DestinationPath .
           
           # Rename the extracted folder to a simple name
-          Rename-Item -Path "wxWidgets-3.2.4" -NewName "wxWidgets"
+          Rename-Item -Path "wxWidgets-3.2.8" -NewName "wxWidgets"
           
           # Configure and build wxWidgets
           mkdir build_wxwidgets
