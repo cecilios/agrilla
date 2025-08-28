@@ -37,7 +37,7 @@
 ##   cmake -DCMAKE_INSTALL_PREFIX=~/programs ..
 #
 #-------------------------------------------------------------------------------------
-cmake_minimum_required(VERSION 3.19)
+cmake_minimum_required(VERSION 3.10)
 project(agrilla VERSION 1.0.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 11)
@@ -74,6 +74,12 @@ message(STATUS "CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}" )
 
 # Find wxWidgets
 find_package(wxWidgets REQUIRED COMPONENTS core base html)
+
+# Enable static linking explicitly for Windows
+if(WIN32)
+    set(wxWidgets_USE_STATIC_LIBS ON)
+    find_package(wxWidgets REQUIRED COMPONENTS core base html)
+endif()
 include(${wxWidgets_USE_FILE})
 
 # Generate the header file with the resources installation path
@@ -123,7 +129,7 @@ set(RESOURCE_FILES
 add_executable(agrilla ${SOURCE_FILES})
 
 # Link with wxWidgets libraries
-target_link_libraries(agrilla ${wxWidgets_LIBRARIES} )
+target_link_libraries(agrilla PRIVATE ${wxWidgets_LIBRARIES})
 
 # Define Debug settings
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
