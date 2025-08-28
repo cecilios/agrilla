@@ -44,30 +44,36 @@ jobs:
         if: steps.cache-wx.outputs.cache-hit != 'true'
         shell: cmd # Use cmd shell for more reliable multi-line commands
         run: |
-          echo "Setting WXWIN environment variable for wxWidgets source."
+          REM Set WXWIN environment variable for wxWidgets source.
           echo "WXWIN=%GITHUB_WORKSPACE%\wxWidgets" > %GITHUB_ENV%
           
-          echo "Downloading wxWidgets source (v3.2.8)."
-          powershell -c "Invoke-WebRequest -Uri 'https://github.com/wxWidgets/wxWidgets/releases/download/v3.2.8/wxWidgets-3.2.8.zip' -OutFile 'wxWidgets.zip'"
+          REM Download wxWidgets source (v3.2.8).
+          powershell -Command "Invoke-WebRequest -Uri 'https://github.com/wxWidgets/wxWidgets/releases/download/v3.2.8/wxWidgets-3.2.8.zip' -OutFile 'wxWidgets.zip'"
           
-          echo "Expanding wxWidgets archive."
-          powershell -c "Expand-Archive -Path 'wxWidgets.zip' -DestinationPath . -Force"
+          REM Expanding wxWidgets archive.
+          powershell -Command "Expand-Archive -Path 'wxWidgets.zip' -DestinationPath '.' -Force"
           
-          echo "Renaming extracted wxWidgets folder."
-          powershell -c "Rename-Item -Path 'wxWidgets-3.2.8' -NewName 'wxWidgets'"
+          REM The Expand-Archive usually creates a folder like 'wxWidgets-3.2.8'.
+          REM Rename it to 'wxWidgets' for consistent pathing.
+          powershell -Command "Rename-Item -Path 'wxWidgets-3.2.8' -NewName 'wxWidgets' -ErrorAction Stop"
 
-          echo "Configuring and building wxWidgets."
-          mkdir build_wxwidgets
-          cd build_wxwidgets
+          REM Configure and build wxWidgets.
+          cd wxWidgets
+          mkdir build_msw
+          cd build_msw
           
-          # CMake command for wxWidgets, using cmd's line continuation (^)
-          cmake ..\wxWidgets -G "Visual Studio 17 2022" -A x64 ^
+          REM CMake command for wxWidgets, using cmd's line continuation (^)
+          cmake .. -G "Visual Studio 17 2022" -A x64 ^
             -DwxBUILD_SHARED=OFF ^
             -DwxBUILD_TOOLKIT="msw" ^
             -DwxBUILD_MSW_OLESHELL=OFF ^
             -DwxBUILD_MSVC_STATIC_RUNTIME=ON
           
-          echo "Compiling wxWidgets."
+          REM Add MSBuild to PATH for this step
+          FOR /f "tokens=*" %%i IN ('where msbuild') DO set MSBUILD_PATH=%%i
+          set PATH=%PATH%;%MSBUILD_PATH%\..
+          
+          REM Compiling wxWidgets.
           msbuild /m /p:Configuration=Release wx_vc17.sln
 
       # Set WXWIN environment variable for subsequent steps when a cache hit occurs
