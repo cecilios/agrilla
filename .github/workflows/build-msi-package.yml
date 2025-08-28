@@ -57,12 +57,7 @@ jobs:
           # Configure and build wxWidgets
           mkdir build_wxwidgets
           cd build_wxwidgets
-          cmake ../wxWidgets -G "Visual Studio 17 2022" `
-            -A x64 `
-            -DwxBUILD_SHARED=OFF `
-            -DwxBUILD_TOOLKIT="msw" `
-            -DwxBUILD_MSW_OLESHELL=OFF `
-            -DwxBUILD_MSVC_STATIC_RUNTIME=ON
+          cmake ../wxWidgets -G "Visual Studio 17 2022" -A x64 -DwxBUILD_SHARED=OFF -DwxBUILD_TOOLKIT="msw" -DwxBUILD_MSW_OLESHELL=OFF -DwxBUILD_MSVC_STATIC_RUNTIME=ON
           
           msbuild /m /p:Configuration=Release wx_vc17.sln
 
