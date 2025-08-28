@@ -44,9 +44,9 @@ jobs:
         if: steps.cache-wx.outputs.cache-hit != 'true'
         shell: pwsh
         run: |
-          Write-Output "=== Cloning wxWidgets repo at v3.2.6 ==="
+          Write-Output "=== Cloning wxWidgets repo ==="
           if (-not (Test-Path "wxWidgets")) { 
-            git clone --branch v3.2.6 --depth 1 --recurse-submodules https://github.com/wxWidgets/wxWidgets.git wxWidgets
+            git clone --branch 3.2 --depth 1 --recurse-submodules https://github.com/wxWidgets/wxWidgets.git wxWidgets
           }
 
           Write-Output "=== Verifying wxWidgets clone ==="
