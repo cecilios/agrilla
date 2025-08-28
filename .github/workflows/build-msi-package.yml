@@ -73,10 +73,6 @@ jobs:
 
           Write-Output "=== Building wxWidgets with CMake ==="
           cmake --build . --config Release
-          Get-ChildItem -Recurse "$env:WXWIN\lib\vc_x64_lib\cmake"
-#          $wxCMakePath = (Get-ChildItem -Recurse "$env:WXWIN\lib\vc_x64_lib\cmake" -Filter wxWidgetsConfig.cmake | Select-Object -First 1).Directory.FullName
-#          Write-Output "Detected wxWidgets CMake config at: $wxCMakePath"
-
 
       # Ensure WXWIN is set when cache was restored
       - name: Set WXWIN env variable on cache hit
