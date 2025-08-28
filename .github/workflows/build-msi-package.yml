@@ -32,26 +32,39 @@ jobs:
         uses: actions/cache@v4
         with:
           path: wxWidgets
-          key: ${{ runner.os }}-wxwidgets-3.2-build-${{ hashFiles('build_wxwidgets/build/msw/wx_vc17.sln') }}
+          key: ${{ runner.os }}-wxwidgets-v3.2.6
           restore-keys: |
-            ${{ runner.os }}-wxwidgets-3.2-build-
+            ${{ runner.os }}-wxwidgets-
 
       - name: Build wxWidgets from source
         if: steps.cache-wx.outputs.cache-hit != 'true'
         shell: pwsh
         run: |
-          Write-Output "=== Cloning wxWidgets repo at v3.2 ==="
-          if (Test-Path "wxWidgets") { Remove-Item -Recurse -Force "wxWidgets" }
-          git clone --branch v3.2 --depth 1 https://github.com/wxWidgets/wxWidgets.git wxWidgets
+          Write-Output "=== Cloning wxWidgets repo at v3.2.6 ==="
+          if (Test-Path "wxWidgets") { 
+            Write-Output "wxWidgets directory already exists. Removing..."
+            Remove-Item -Recurse -Force "wxWidgets" 
+          }
+          git clone --branch v3.2.6 --depth 1 --recurse-submodules https://github.com/wxWidgets/wxWidgets.git wxWidgets
+
+          Write-Output "=== Verifying wxWidgets clone ==="
+          if (-not (Test-Path "wxWidgets\CMakeLists.txt")) {
+            Write-Error "ERROR: wxWidgets clone is incomplete (CMakeLists.txt missing)"
+            exit 1
+          }
 
           Write-Output "Setting WXWIN to $env:GITHUB_WORKSPACE\wxWidgets"
           "WXWIN=$env:GITHUB_WORKSPACE\wxWidgets" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
           Write-Output "=== Configuring wxWidgets ==="
-          if (-not (Test-Path "wxWidgets\build_msw")) { mkdir "wxWidgets\build_msw" }
+          if (-not (Test-Path "wxWidgets\build_msw")) { 
+            mkdir "wxWidgets\build_msw" 
+          }
           cd wxWidgets\build_msw
 
-          cmake .. -G "Visual Studio 17 2022" -A x64 `
+          cmake .. `
+            -G "Visual Studio 17 2022" `
+            -A x64 `
             -DwxBUILD_SHARED=OFF `
             -DwxBUILD_TOOLKIT="msw" `
             -DwxBUILD_MSVC_STATIC_RUNTIME=ON
@@ -74,11 +87,15 @@ jobs:
           "$wixPath\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
           Write-Output "=== Ensuring build directory exists ==="
-          if (-not (Test-Path "build")) { mkdir build }
+          if (-not (Test-Path "build")) { 
+            mkdir build 
+          }
           cd build
 
           Write-Output "=== Configuring application ==="
-          cmake .. -G "Visual Studio 17 2022" -A x64 `
+          cmake .. `
+            -G "Visual Studio 17 2022" `
+            -A x64 `
             -DwxWidgets_USE_LIBS="core;base;html" `
             -DwxWidgets_ROOT_DIR="$env:WXWIN" `
             -DwxWidgets_STATIC_LIBS=ON
