@@ -27,25 +27,27 @@ jobs:
           choco install cmake -y
           choco install wixtoolset -y
 
+      # Cache wxWidgets build artifacts to speed up future runs
       - name: Cache wxWidgets build
         id: cache-wx
         uses: actions/cache@v4
         with:
-          path: wxWidgets
-          key: ${{ runner.os }}-wxwidgets-v3.2.6
+          path: |
+            wxWidgets/build_msw
+            wxWidgets/lib
+          key: ${{ runner.os }}-wxwidgets-v3.2.6-msvc-x64-Release
           restore-keys: |
             ${{ runner.os }}-wxwidgets-
 
+      # Build wxWidgets from source if not found in cache
       - name: Build wxWidgets from source
         if: steps.cache-wx.outputs.cache-hit != 'true'
         shell: pwsh
         run: |
           Write-Output "=== Cloning wxWidgets repo at v3.2.6 ==="
-          if (Test-Path "wxWidgets") { 
-            Write-Output "wxWidgets directory already exists. Removing..."
-            Remove-Item -Recurse -Force "wxWidgets" 
+          if (-not (Test-Path "wxWidgets")) { 
+            git clone --branch v3.2.6 --depth 1 --recurse-submodules https://github.com/wxWidgets/wxWidgets.git wxWidgets
           }
-          git clone --branch 3.2 --depth 1 --recurse-submodules https://github.com/wxWidgets/wxWidgets.git wxWidgets
 
           Write-Output "=== Verifying wxWidgets clone ==="
           if (-not (Test-Path "wxWidgets\CMakeLists.txt")) {
@@ -71,7 +73,12 @@ jobs:
 
           Write-Output "=== Building wxWidgets with CMake ==="
           cmake --build . --config Release
+          Get-ChildItem -Recurse "$env:WXWIN\lib\vc_x64_lib\cmake"
+#          $wxCMakePath = (Get-ChildItem -Recurse "$env:WXWIN\lib\vc_x64_lib\cmake" -Filter wxWidgetsConfig.cmake | Select-Object -First 1).Directory.FullName
+#          Write-Output "Detected wxWidgets CMake config at: $wxCMakePath"
 
+
+      # Ensure WXWIN is set when cache was restored
       - name: Set WXWIN env variable on cache hit
         if: steps.cache-wx.outputs.cache-hit == 'true'
         run: |
@@ -98,7 +105,7 @@ jobs:
             -DwxWidgets_USE_LIBS="core;base;html" `
             -DwxWidgets_ROOT_DIR="$env:WXWIN" `
             -DwxWidgets_LIB_DIR="$env:WXWIN\build_msw\lib\vc_x64_lib" `
-            -DCMAKE_PREFIX_PATH="$env:WXWIN\lib\vc_x64_lib\cmake\wxWidgets" `
+            -DCMAKE_PREFIX_PATH="$env:WXWIN\lib\vc_x64_lib\cmake" `
             -DwxWidgets_STATIC_LIBS=ON
 
           Write-Output "=== Building application ==="
