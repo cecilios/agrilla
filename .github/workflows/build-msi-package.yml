@@ -34,7 +34,7 @@ jobs:
         id: cache-wx
         uses: actions/cache@v4
         with:
-          path: wxWidgets
+          path: wxWidgets # This is the directory that will be cached
           key: ${{ runner.os }}-wxwidgets-3.2.8-build-${{ hashFiles('build_wxwidgets/build/msw/wx_vc17.sln') }}
           restore-keys: |
             ${{ runner.os }}-wxwidgets-3.2.8-build-
@@ -42,33 +42,46 @@ jobs:
       # Build wxWidgets from source if cache is missed
       - name: Build wxWidgets from source
         if: steps.cache-wx.outputs.cache-hit != 'true'
+        shell: cmd # Use cmd shell for more reliable multi-line commands
         run: |
-          # Define WXWIN environment variable for this and subsequent steps
-          echo "WXWIN=$env:GITHUB_WORKSPACE\wxWidgets" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          echo "Setting WXWIN environment variable for wxWidgets source."
+          echo "WXWIN=%GITHUB_WORKSPACE%\wxWidgets" > %GITHUB_ENV%
           
-          # Download wxWidgets source
-          # Replace 'v3.2.8' with your desired version tag
-          Invoke-WebRequest -Uri "https://github.com/wxWidgets/wxWidgets/releases/download/v3.2.8/wxWidgets-3.2.8.zip -OutFile "wxWidgets.zip"
-          Expand-Archive -Path "wxWidgets.zip" -DestinationPath .
+          echo "Downloading wxWidgets source (v3.2.8)."
+          powershell -c "Invoke-WebRequest -Uri 'https://github.com/wxWidgets/wxWidgets/releases/download/v3.2.8/wxWidgets-3.2.8.zip' -OutFile 'wxWidgets.zip'"
           
-          # Rename the extracted folder to a simple name
-          Rename-Item -Path "wxWidgets-3.2.8" -NewName "wxWidgets"
+          echo "Expanding wxWidgets archive."
+          powershell -c "Expand-Archive -Path 'wxWidgets.zip' -DestinationPath . -Force"
           
-          # Configure and build wxWidgets
+          echo "Renaming extracted wxWidgets folder."
+          powershell -c "Rename-Item -Path 'wxWidgets-3.2.8' -NewName 'wxWidgets'"
+
+          echo "Configuring and building wxWidgets."
           mkdir build_wxwidgets
           cd build_wxwidgets
-          cmake ../wxWidgets -G "Visual Studio 17 2022" -A x64 -DwxBUILD_SHARED=OFF -DwxBUILD_TOOLKIT="msw" -DwxBUILD_MSW_OLESHELL=OFF -DwxBUILD_MSVC_STATIC_RUNTIME=ON
           
+          # CMake command for wxWidgets, using cmd's line continuation (^)
+          cmake ..\wxWidgets -G "Visual Studio 17 2022" -A x64 ^
+            -DwxBUILD_SHARED=OFF ^
+            -DwxBUILD_TOOLKIT="msw" ^
+            -DwxBUILD_MSW_OLESHELL=OFF ^
+            -DwxBUILD_MSVC_STATIC_RUNTIME=ON
+          
+          echo "Compiling wxWidgets."
           msbuild /m /p:Configuration=Release wx_vc17.sln
 
       # Set WXWIN environment variable for subsequent steps when a cache hit occurs
+      # This ensures WXWIN is always defined for the application build step.
       - name: Set WXWIN env variable on cache hit
         if: steps.cache-wx.outputs.cache-hit == 'true'
-        run: echo "WXWIN=$env:GITHUB_WORKSPACE\wxWidgets" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+        run: |
+          echo "Cache hit for wxWidgets, setting WXWIN environment variable."
+          echo "WXWIN=$env:GITHUB_WORKSPACE\wxWidgets" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       # Configure and build the main application
       - name: Configure and Build App
         run: |
+          echo "Adding WiX Toolset to PATH."
           # Add WiX to PATH for this and subsequent steps
           $wixPath = (Get-ChildItem "C:\Program Files (x86)\WiX Toolset v*" | Sort-Object LastWriteTime -Descending | Select-Object -First 1).FullName
           echo "$wixPath\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
@@ -76,22 +89,26 @@ jobs:
           mkdir build
           cd build
           
+          echo "Configuring application with CMake, linking statically to wxWidgets."
           # Configure CMake with wxWidgets path and static linkage
           cmake .. -G "Visual Studio 17 2022" -A x64 `
             -DwxWidgets_USE_LIBS="core;base;html" `
             -DwxWidgets_ROOT_DIR="$env:WXWIN" `
             -DwxWidgets_STATIC_LIBS=ON
 
+          echo "Building the main application using CMake."
           # Build the main application using CMake
           cmake --build . --config Release
 
       # Generate the MSI package
       - name: Generate the MSI package
         run: |
+          echo "Setting WIXTARGETS environment variable."
           # Set WIXTARGETS environment variable for MSBuild
           $wixPath = (Get-ChildItem "C:\Program Files (x86)\WiX Toolset v*" | Sort-Object LastWriteTime -Descending | Select-Object -First 1).FullName
           echo "WIXTARGETS=$wixPath\Wix.targets" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           
+          echo "Building the MSI installer package."
           # MSBuild command for the WiX installer project
           msbuild agrilla.wixproj /p:Configuration=Release
         working-directory: ${{ github.workspace }}
@@ -102,3 +119,4 @@ jobs:
         with:
           name: agrilla-msi-installer
           path: bin/Release/agrilla.msi
+
