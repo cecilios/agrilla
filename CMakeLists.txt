@@ -73,14 +73,30 @@ message(STATUS "SHARED_DIR = ${SHARED_DIR}" )
 message(STATUS "CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}" )
 
 # Find wxWidgets
-find_package(wxWidgets REQUIRED COMPONENTS core base html)
-
-# Enable static linking explicitly for Windows
+#find_package(wxWidgets REQUIRED COMPONENTS core base html)
+#
+## Enable static linking explicitly for Windows
+#if(WIN32)
+#    set(wxWidgets_USE_STATIC_LIBS ON)
+#    find_package(wxWidgets REQUIRED COMPONENTS core base html)
+#endif()
+# Find wxWidgets
 if(WIN32)
-    set(wxWidgets_USE_STATIC_LIBS ON)
+    # On Windows, to generate the MSI instaler, we build wxWidgets locally to
+    # link statically and avoid problem. So we suse its CMake config files
+    find_package(wxWidgets CONFIG REQUIRED)
+
+    target_link_libraries(agrilla PRIVATE
+        wx::core
+        wx::base
+        wx::html
+    )
+else()
+    # On Linux/macOS, use system-installed wxWidgets via the FindwxWidgets.cmake module
     find_package(wxWidgets REQUIRED COMPONENTS core base html)
+    include(${wxWidgets_USE_FILE})
+    target_link_libraries(agrilla PRIVATE ${wxWidgets_LIBRARIES})
 endif()
-include(${wxWidgets_USE_FILE})
 
 # Generate the header file with the resources installation path
 configure_file(
