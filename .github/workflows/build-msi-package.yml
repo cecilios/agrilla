@@ -101,9 +101,8 @@ jobs:
             -DCMAKE_BUILD_TYPE=Release `
             -DwxWidgets_USE_LIBS="core;base;html" `
             -DwxWidgets_ROOT_DIR="$env:WXWIN" `
-            -DCMAKE_PREFIX_PATH="$wxWidgetsCmakeDir" `
+            -DwxWidgets_LIB_DIR="$env:WXWIN\build_msw\lib\vc_x64_lib" `
             -DwxWidgets_STATIC_LIBS=ON
-
           Write-Output "=== Building application ==="
           cmake --build . --config Release
 
