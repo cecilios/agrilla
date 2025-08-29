@@ -35,7 +35,7 @@ jobs:
           path: |
             wxWidgets/build_msw
             wxWidgets/lib
-          key: ${{ runner.os }}-wxwidgets-v3.2.6-msvc-x64-Release
+          key: ${{ runner.os }}-wxwidgets-msvc-x64-Release
           restore-keys: |
             ${{ runner.os }}-wxwidgets-
 
@@ -96,12 +96,12 @@ jobs:
           cd build
 
           Write-Output "=== Configuring application ==="
+          $wxWidgetsCmakeDir = Join-Path $env:WXWIN "lib\vc_x64_lib\cmake"
           cmake .. -G "Visual Studio 17 2022" -A x64 `
             -DCMAKE_BUILD_TYPE=Release `
             -DwxWidgets_USE_LIBS="core;base;html" `
             -DwxWidgets_ROOT_DIR="$env:WXWIN" `
-            -DwxWidgets_LIB_DIR="$env:WXWIN\build_msw\lib\vc_x64_lib" `
-            -DCMAKE_PREFIX_PATH="$env:WXWIN\lib\vc_x64_lib\cmake" `
+            -DCMAKE_PREFIX_PATH="$wxWidgetsCmakeDir" `
             -DwxWidgets_STATIC_LIBS=ON
 
           Write-Output "=== Building application ==="
